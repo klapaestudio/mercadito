@@ -22,12 +22,35 @@ Abrí <http://localhost:3000>.
 
 La primera vez se crea solo el usuario admin con `ADMIN_USER` / `ADMIN_PASSWORD` del `.env` (por defecto `admin` / `cambiame123`).
 
+### Datos de ejemplo
+
+```bash
+npm run seed
+```
+
+Este comando **borra** clientes, cajeros, visitas, beneficios, notificaciones, eventos y reservas, y los vuelve a crear. No toca los admins ni la configuración.
+
+| Rol | Usuario | Contraseña |
+|---|---|---|
+| Admin | `admin` | la de `ADMIN_PASSWORD` |
+| Cajero | `caja` | `caja1234` |
+| Bianca Dondio, Marta 3, cumple esta semana | `1150000001` | `cliente123` |
+| Costanza Rinaldi, Marta 2, con un café para canjear | `1150000002` | `cliente123` |
+| Martina Gómez, Marta 1, a 1 sello de completar | `1150000003` | `cliente123` |
+| Tomás Aguirre, 42 días sin venir | `1150000006` | `cliente123` |
+| Federico Paz, recién registrado | `1150000010` | `cliente123` |
+
+Hay 12 clientes en total (`1150000001` a `1150000012`). Al final, el seed imprime la lista con nivel y sellos de cada uno.
+
+También crea cuatro eventos: uno en ventana de prioridad Marta 3, uno abierto y casi lleno, uno que todavía no abre reservas y uno pasado.
+
 ### Scripts
 
 | Comando | Qué hace |
 |---|---|
 | `npm run dev` | Servidor con recarga automática al editar `src/` |
 | `npm start` | Servidor en modo normal (el que usa Railway) |
+| `npm run seed` | Carga datos de ejemplo (borra los anteriores) |
 | `npm run icons` | Regenera los íconos PNG de la PWA a partir de `public/img/logo.svg` |
 
 ## Variables de entorno
