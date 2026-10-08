@@ -1,7 +1,7 @@
 /**
  * Datos de ejemplo para probar la app en local: `npm run seed`.
- * BORRA clientes, cajeros, visitas, beneficios, notificaciones, eventos y reservas,
- * y los vuelve a crear. Mantiene los admins y la configuración.
+ * BORRA clientes, cajeros, visitas, beneficios, notificaciones, eventos, reservas y
+ * plantillas de beneficios, y los vuelve a crear. Mantiene los admins, los niveles y la configuración.
  */
 const config = require('../config');
 
@@ -16,8 +16,6 @@ const users = require('../services/users');
 const settings = require('../services/settings');
 const time = require('../lib/time');
 
-bootstrap();
-
 const PASSWORD_CLIENTES = 'cliente123';
 const DAY = 24 * 60 * 60 * 1000;
 const now = Date.now();
@@ -26,7 +24,6 @@ const today = time.today();
 // Pseudoaleatorio con semilla fija: el seed siempre genera lo mismo
 let s = 42;
 const rand = () => ((s = (s * 16807) % 2147483647) - 1) / 2147483646;
-const pick = (arr) => arr[Math.floor(rand() * arr.length)];
 
 const sqlAt = (msAgo, hour = 10) => {
   const d = new Date(now - msAgo);
@@ -41,9 +38,12 @@ db.transaction(() => {
     DELETE FROM reservations; DELETE FROM notifications; DELETE FROM benefits;
     DELETE FROM visits; DELETE FROM events; DELETE FROM login_attempts; DELETE FROM sessions;
     DELETE FROM users WHERE role IN ('cliente','cajero');
-    DELETE FROM benefit_templates WHERE trigger IN ('subir_nivel','evento','manual');
+    DELETE FROM benefit_templates;
   `);
 })();
+
+// Vuelve a crear niveles, configuración y plantillas por defecto que falten
+bootstrap();
 
 const levels = db.prepare('SELECT * FROM levels ORDER BY min_visits').all();
 const levelFor = (visits) => levels.filter((l) => visits >= l.min_visits).pop();
@@ -141,14 +141,14 @@ db.transaction(() => {
         q.benefit.run(u.id, t.id, t.name, t.description, 'tarjeta_completa', `tarjeta:${n}`, at, expires,
           status, redeemedAt, redeemedAt ? cajero.id : null);
         q.notif.run(u.id, 'tarjeta_completa', '¡Completaste tu tarjeta!', `Ganaste: ${t.name}. Tu tarjeta vuelve a empezar.`,
-          (n / stampsPerCard - 1) % 3 + 1, 1, readAt, at);
+          (n / stampsPerCard - 1) % 3 + 1, 0, readAt, at);
       }
 
       // Subida de nivel
       const lvl = levels.find((l) => l.min_visits === n && n > 0);
       if (lvl) {
         const t = lvl.id === marta2.id ? tplM2 : lvl.id === marta3.id ? tplM3 : null;
-        q.notif.run(u.id, 'nivel', `¡Subiste a ${lvl.name}!`, lvl.perks, lvl.id === marta3.id ? 3 : 2, 1, readAt, at);
+        q.notif.run(u.id, 'nivel', `¡Subiste a ${lvl.name}!`, lvl.perks, lvl.id === marta3.id ? 3 : 2, 0, readAt, at);
         if (t) {
           const issuedDay = time.today(new Date(now - ago * DAY));
           const expires = time.addDays(issuedDay, t.validity_days);
@@ -185,7 +185,7 @@ db.transaction(() => {
   for (const c of created.filter((x) => x.lastDaysAgo !== null && x.lastDaysAgo >= settings.get('miss_you_days'))) {
     const last = db.prepare('SELECT last_visit_at FROM users WHERE id = ?').get(c.id).last_visit_at;
     const issued = time.toSql(new Date(now - 2 * DAY));
-    q.benefit.run(c.id, tm.id, tm.name, tm.description, 'te_extranamos', `extranamos:${last.slice(0, 10)}`,
+    q.benefit.run(c.id, tm.id, tm.name, tm.description, 'te_extranamos', `extranamos:${time.sqlToLocalDate(last)}`,
       issued, time.addDays(today, tm.validity_days - 2), 'activo', null, null);
     q.notif.run(c.id, 'te_extranamos', 'Te extrañamos', `Hace rato que no pasás. Te guardamos un regalo: ${tm.name}.`, 2, 0, null, issued);
   }
@@ -248,6 +248,12 @@ db.transaction(() => {
     }
   }
 })();
+
+// Los avisos de prioridad ya se cargaron arriba: que el cron no los repita
+db.prepare("UPDATE events SET priority_notified_at = booking_opens_at WHERE booking_opens_at <= datetime('now')").run();
+// Las tareas diarias de hoy ya quedan hechas por el seed
+db.prepare(`INSERT INTO cron_runs (task, last_run) VALUES ('daily', ?)
+            ON CONFLICT(task) DO UPDATE SET last_run = excluded.last_run`).run(today);
 
 /* ---------- Resumen ---------- */
 

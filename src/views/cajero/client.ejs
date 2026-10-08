@@ -1,0 +1,55 @@
+<a class="back" href="/caja">‹ Cargar otra visita</a>
+
+<header class="client-head">
+  <div>
+    <h1><%= fullName(c) %></h1>
+    <p class="muted"><%= c.phone %> · <%= c.total_visits %> visita<%= c.total_visits === 1 ? '' : 's' %>
+      <% if (c.last_visit_at) { %> · última <%= time.relativeDay(c.last_visit_at) %><% } %></p>
+  </div>
+  <span class="pill pill-solid"><%= c.level_name || '—' %></span>
+</header>
+
+<% if (!c.active) { %><div class="form-error">Esta cuenta está desactivada.</div><% } %>
+
+<% if (tempPassword) { %>
+  <div class="temp-pass" role="status">
+    <span>Contraseña temporal para <%= c.first_name %>:</span>
+    <strong><%= tempPassword %></strong>
+    <span class="muted small">Decísela al cliente. Al ingresar va a tener que crear una nueva. No se vuelve a mostrar.</span>
+  </div>
+<% } %>
+
+<section class="card card-stamps">
+  <div class="card-head">
+    <h2>Tarjeta</h2>
+    <span class="muted"><strong class="fg"><%= c.card_stamps %></strong> / <%= stampsPerCard %></span>
+  </div>
+  <%- include('../partials/stamps', { stamps: c.card_stamps, stampsPerCard, compact: true }) %>
+  <form method="post" action="/caja/cliente/<%= c.id %>/visita">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <button class="btn btn-block btn-big" type="submit"<%- blockedToday || !c.active ? ' disabled data-server-disabled' : '' %>>Sumar visita</button>
+  </form>
+  <% if (blockedToday) { %><p class="hint center">Ya sumó su sello de hoy (1 por día).</p><% } %>
+  <% if (progress.next) { %>
+    <p class="hint center">Le falta<%= progress.missing === 1 ? '' : 'n' %> <%= progress.missing %> visita<%= progress.missing === 1 ? '' : 's' %> para <%= progress.next.name %>.</p>
+  <% } %>
+</section>
+
+<section class="section">
+  <h2>Beneficios para canjear</h2>
+  <% if (benefits.length) { %>
+    <div class="list">
+      <% for (const b of benefits) { %><%- include('../partials/benefit', { b, daysLeft, redeem: 'caja' }) %><% } %>
+    </div>
+  <% } else { %>
+    <p class="muted">No tiene beneficios disponibles.</p>
+  <% } %>
+</section>
+
+<section class="section actions-row">
+  <form method="post" action="/caja/cliente/<%= c.id %>/resetear-clave" data-confirm="¿Generar una contraseña temporal para <%= c.first_name %>? La actual deja de funcionar.">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <button class="btn btn-secondary" type="submit">Resetear contraseña</button>
+  </form>
+  <% if (user.role === 'admin') { %><a class="btn btn-secondary" href="/admin/clientes/<%= c.id %>">Ver ficha completa</a><% } %>
+</section>

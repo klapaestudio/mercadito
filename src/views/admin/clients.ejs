@@ -1,0 +1,58 @@
+<div class="page-head">
+  <h1 class="page-title">Clientes</h1>
+  <span class="muted"><%= total %> resultado<%= total === 1 ? '' : 's' %></span>
+</div>
+
+<form class="filters" method="get" action="/admin/clientes">
+  <input name="q" value="<%= f.q %>" type="search" placeholder="Buscar por nombre, celular o email" aria-label="Buscar">
+  <select name="level" aria-label="Nivel">
+    <option value="">Todos los niveles</option>
+    <% for (const l of levels) { %><option value="<%= l.id %>"<%= String(l.id) === f.level ? ' selected' : '' %>><%= l.name %></option><% } %>
+  </select>
+  <select name="cumple" aria-label="Cumpleaños">
+    <option value="">Cualquier cumpleaños</option>
+    <option value="mes"<%= f.cumple === 'mes' ? ' selected' : '' %>>Cumplen este mes</option>
+  </select>
+  <select name="sin_visitas" aria-label="Sin visitas">
+    <option value="">Con o sin visitas recientes</option>
+    <% for (const d of [15, 30, 60, 90]) { %><option value="<%= d %>"<%= String(d) === f.inactiveDays ? ' selected' : '' %>>Sin visitas hace <%= d %>+ días</option><% } %>
+  </select>
+  <button class="btn" type="submit">Filtrar</button>
+  <% if (f.q || f.level || f.cumple || f.inactiveDays) { %><a class="link-btn" href="/admin/clientes">Limpiar</a><% } %>
+</form>
+
+<% if (rows.length) { %>
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr><th>Cliente</th><th>Celular</th><th>Nivel</th><th class="num">Visitas</th><th class="num">Sellos</th><th>Última visita</th><th>Cumpleaños</th></tr>
+      </thead>
+      <tbody>
+        <% for (const c of rows) { %>
+          <tr data-href="/admin/clientes/<%= c.id %>">
+            <td><a href="/admin/clientes/<%= c.id %>"><strong><%= fullName(c) %></strong></a><%= c.active ? '' : ' · desactivado' %></td>
+            <td><%= c.phone %></td>
+            <td><span class="pill pill-xs"><%= c.level_name || '—' %></span></td>
+            <td class="num"><%= c.total_visits %></td>
+            <td class="num"><%= c.card_stamps %></td>
+            <td><%= c.last_visit_at ? time.relativeDay(c.last_visit_at) : 'Nunca' %></td>
+            <td><%= time.fmtDayMonth(c.birthday) %></td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+  <% if (pages > 1) { %>
+    <nav class="pager">
+      <% const qs = (p) => new URLSearchParams({ ...query, p }).toString(); %>
+      <% if (page > 1) { %><a class="btn btn-secondary btn-small" href="?<%= qs(page - 1) %>">‹ Anterior</a><% } %>
+      <span class="muted small">Página <%= page %> de <%= pages %></span>
+      <% if (page < pages) { %><a class="btn btn-secondary btn-small" href="?<%= qs(page + 1) %>">Siguiente ›</a><% } %>
+    </nav>
+  <% } %>
+<% } else { %>
+  <div class="empty">
+    <%- include('../partials/art', { key: 3, cls: 'empty-art' }) %>
+    <p>No hay clientes con estos filtros.</p>
+  </div>
+<% } %>

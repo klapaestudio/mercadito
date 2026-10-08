@@ -1,0 +1,79 @@
+<%
+  const err = (k) => errors[k] ? `<small class="field-error">${errors[k]}</small>` : '';
+  const perr = (k) => pwErrors[k] ? `<small class="field-error">${pwErrors[k]}</small>` : '';
+  const isClient = user.role === 'cliente';
+%>
+<h1 class="page-title">Mi cuenta</h1>
+
+<form class="card form" method="post" action="/mi-cuenta/datos" novalidate>
+  <h2>Tus datos</h2>
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <div class="row-2">
+    <label class="field<%= errors.first_name ? ' invalid' : '' %>">
+      <span>Nombre</span>
+      <input name="first_name" value="<%= form.first_name %>" autocomplete="given-name" required>
+      <%- err('first_name') %>
+    </label>
+    <label class="field<%= errors.last_name ? ' invalid' : '' %>">
+      <span>Apellido</span>
+      <input name="last_name" value="<%= form.last_name %>" autocomplete="family-name">
+      <%- err('last_name') %>
+    </label>
+  </div>
+  <% if (isClient) { %>
+    <label class="field<%= errors.phone ? ' invalid' : '' %>">
+      <span>Celular</span>
+      <input name="phone" value="<%= form.phone %>" type="tel" inputmode="numeric" autocomplete="tel" required>
+      <small class="hint">Es tu usuario para ingresar.</small>
+      <%- err('phone') %>
+    </label>
+    <label class="field<%= errors.email ? ' invalid' : '' %>">
+      <span>Email <em class="muted">(opcional)</em></span>
+      <input name="email" value="<%= form.email || '' %>" type="email" autocomplete="email">
+      <%- err('email') %>
+    </label>
+    <div class="field">
+      <span>Cumpleaños</span>
+      <div class="readonly"><%= time.fmtDate(user.birthday) %></div>
+      <small class="hint">Si hay un error en tu fecha, pedí que la corrijan en el mostrador.</small>
+    </div>
+  <% } else { %>
+    <div class="field">
+      <span>Usuario</span>
+      <div class="readonly"><%= user.username %></div>
+    </div>
+  <% } %>
+  <button class="btn" type="submit">Guardar datos</button>
+</form>
+
+<form class="card form" method="post" action="/mi-cuenta/clave" novalidate>
+  <h2>Cambiar contraseña</h2>
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <label class="field<%= pwErrors.current ? ' invalid' : '' %>">
+    <span>Contraseña actual</span>
+    <input name="current" type="password" autocomplete="current-password" required>
+    <%- perr('current') %>
+  </label>
+  <div class="row-2">
+    <label class="field<%= pwErrors.password ? ' invalid' : '' %>">
+      <span>Nueva contraseña</span>
+      <input name="password" type="password" autocomplete="new-password" minlength="6" required>
+      <%- perr('password') %>
+    </label>
+    <label class="field<%= pwErrors.password2 ? ' invalid' : '' %>">
+      <span>Repetila</span>
+      <input name="password2" type="password" autocomplete="new-password" required>
+      <%- perr('password2') %>
+    </label>
+  </div>
+  <button class="btn" type="submit">Cambiar contraseña</button>
+</form>
+
+<% if (isClient) { %>
+  <p class="hint center">Tus datos se usan según la <a href="/privacidad">política de datos personales</a> (Ley 25.326).</p>
+<% } %>
+
+<form class="center sign-out" method="post" action="/salir">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <button class="btn btn-secondary" type="submit">Cerrar sesión</button>
+</form>

@@ -1,0 +1,22 @@
+<div class="page-head">
+  <h1 class="page-title">Beneficios</h1>
+  <a class="btn btn-small" href="/admin/beneficios/nuevo">Nuevo beneficio</a>
+</div>
+<p class="muted">Plantillas de beneficios. Cada vez que se cumple la condición, el cliente recibe uno con vencimiento propio.</p>
+
+<div class="table-wrap">
+  <table class="table">
+    <thead><tr><th>Beneficio</th><th>Se otorga</th><th class="num">Vigencia</th><th class="num">Activos ahora</th><th>Estado</th></tr></thead>
+    <tbody>
+      <% for (const t of list) { %>
+        <tr data-href="/admin/beneficios/<%= t.id %>" class="<%= t.active ? '' : 'row-off' %>">
+          <td><a href="/admin/beneficios/<%= t.id %>"><strong><%= t.name %></strong></a><% if (t.description) { %><br><span class="muted small"><%= t.description %></span><% } %></td>
+          <td><%= TRIGGERS[t.trigger] %><%= t.level_name ? ': ' + t.level_name : '' %><%= t.event_name ? ': ' + t.event_name : '' %></td>
+          <td class="num"><%= t.trigger === 'cumpleanos' ? 'Semana' : t.validity_days + ' días' %></td>
+          <td class="num"><%= counts[t.id] || 0 %></td>
+          <td><span class="pill pill-xs<%= t.active ? '' : ' pill-muted' %>"><%= t.active ? 'Activo' : 'Inactivo' %></span></td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,120 @@
+<a class="back" href="/admin/clientes">‹ Clientes</a>
+
+<header class="client-head">
+  <div>
+    <h1><%= fullName(c) %></h1>
+    <p class="muted">
+      <%= c.phone %><%= c.email ? ' · ' + c.email : '' %> · Cumple el <%= time.fmtDayMonth(c.birthday) %><br>
+      Cliente desde el <%= time.fmtDate(c.created_at) %><%= c.active ? '' : ' · CUENTA DESACTIVADA' %>
+    </p>
+  </div>
+  <span class="pill pill-solid"><%= c.level_name || '—' %></span>
+</header>
+
+<% if (tempPassword) { %>
+  <div class="temp-pass" role="status">
+    <span>Contraseña temporal para <%= c.first_name %>:</span>
+    <strong><%= tempPassword %></strong>
+    <span class="muted small">Decísela al cliente. Al ingresar va a tener que crear una nueva. No se vuelve a mostrar.</span>
+  </div>
+<% } %>
+
+<div class="stats stats-3">
+  <div class="stat"><span class="stat-n"><%= c.total_visits %></span><span class="stat-l">Visitas totales</span></div>
+  <div class="stat"><span class="stat-n"><%= c.card_stamps %>/<%= stampsPerCard %></span><span class="stat-l">Sellos en la tarjeta</span></div>
+  <div class="stat"><span class="stat-n"><%= active.length %></span><span class="stat-l">Beneficios activos</span></div>
+</div>
+
+<div class="grid-2">
+  <section class="card">
+    <h2>Tarjeta</h2>
+    <%- include('../partials/stamps', { stamps: c.card_stamps, stampsPerCard, compact: true }) %>
+    <p class="hint">
+      <% if (progress.next) { %>Le falta<%= progress.missing === 1 ? '' : 'n' %> <%= progress.missing %> visita<%= progress.missing === 1 ? '' : 's' %> para <%= progress.next.name %>.<% } else { %>Está en el nivel más alto.<% } %>
+    </p>
+    <div class="actions-row">
+      <a class="btn btn-small" href="/caja/cliente/<%= c.id %>">Cargar visita / canjear</a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Acciones</h2>
+    <form class="form-inline" method="post" action="/admin/clientes/<%= c.id %>/beneficio">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <select name="template_id" aria-label="Beneficio a otorgar" required>
+        <% for (const t of templates) { %><option value="<%= t.id %>"><%= t.name %> (<%= t.validity_days %> días)</option><% } %>
+      </select>
+      <button class="btn btn-small" type="submit">Otorgar</button>
+    </form>
+    <div class="actions-row">
+      <form method="post" action="/caja/cliente/<%= c.id %>/resetear-clave" data-confirm="¿Generar una contraseña temporal para <%= c.first_name %>?">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <input type="hidden" name="back" value="admin">
+        <button class="btn btn-secondary btn-small" type="submit">Resetear contraseña</button>
+      </form>
+      <form method="post" action="/admin/clientes/<%= c.id %>/estado" data-confirm="<%= c.active ? '¿Desactivar la cuenta? El cliente no va a poder ingresar.' : '¿Reactivar la cuenta?' %>">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <input type="hidden" name="active" value="<%= c.active ? '0' : '1' %>">
+        <button class="btn btn-small <%= c.active ? 'btn-danger' : 'btn-secondary' %>" type="submit"><%= c.active ? 'Desactivar cuenta' : 'Reactivar cuenta' %></button>
+      </form>
+    </div>
+  </section>
+</div>
+
+<section class="section">
+  <h2>Beneficios activos</h2>
+  <% if (active.length) { %>
+    <div class="list"><% for (const b of active) { %><%- include('../partials/benefit', { b, daysLeft, redeem: 'admin' }) %><% } %></div>
+  <% } else { %><p class="muted">No tiene beneficios activos.</p><% } %>
+</section>
+
+<div class="grid-2">
+  <section class="section">
+    <h2>Historial de visitas</h2>
+    <% if (visits.length) { %>
+      <div class="table-wrap table-scroll">
+        <table class="table table-compact">
+          <thead><tr><th>Fecha</th><th>Hora</th><th>Cargó</th></tr></thead>
+          <tbody>
+            <% for (const v of visits) { %>
+              <tr><td><%= time.fmtDate(v.local_date) %></td><td><%= time.fmtTime(v.created_at) %></td><td><%= v.cashier_name || '—' %></td></tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+      <% if (c.total_visits > visits.length) { %><p class="hint">Mostrando las últimas <%= visits.length %>.</p><% } %>
+    <% } else { %><p class="muted">Todavía no tiene visitas.</p><% } %>
+  </section>
+
+  <section class="section">
+    <h2>Beneficios usados y vencidos</h2>
+    <% if (history.length) { %>
+      <div class="table-wrap">
+        <table class="table table-compact">
+          <thead><tr><th>Beneficio</th><th>Estado</th><th>Fecha</th></tr></thead>
+          <tbody>
+            <% for (const b of history) { %>
+              <tr>
+                <td><%= b.title %></td>
+                <td><%= b.status === 'canjeado' ? 'Canjeado' : 'Vencido' %></td>
+                <td><%= b.status === 'canjeado' ? time.fmtDate(b.redeemed_at) : time.fmtDate(b.expires_at) %></td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %><p class="muted">Sin historial.</p><% } %>
+
+    <h2 class="mt">Reservas</h2>
+    <% if (reservations.length) { %>
+      <div class="list list-plain">
+        <% for (const r of reservations) { %>
+          <a class="row-link" href="/admin/eventos/<%= r.event_id %>">
+            <span><strong><%= r.name %></strong><span class="muted small"><%= time.fmtDate(r.starts_at) %></span></span>
+            <span class="muted small"><%= r.seats %> lugar<%= r.seats > 1 ? 'es' : '' %><%= r.status === 'cancelada' ? ' · cancelada' : '' %></span>
+          </a>
+        <% } %>
+      </div>
+    <% } else { %><p class="muted">Sin reservas.</p><% } %>
+  </section>
+</div>

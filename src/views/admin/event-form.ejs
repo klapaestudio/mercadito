@@ -1,0 +1,60 @@
+<%
+  const err = (k) => errors[k] ? `<small class="field-error">${errors[k]}</small>` : '';
+%>
+<a class="back" href="<%= ev.id ? '/admin/eventos/' + ev.id : '/admin/eventos' %>">‹ Volver</a>
+<h1 class="page-title"><%= title %></h1>
+
+<form class="card form" method="post" action="/admin/eventos" novalidate>
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <% if (ev.id) { %><input type="hidden" name="id" value="<%= ev.id %>"><% } %>
+
+  <label class="field<%= errors.name ? ' invalid' : '' %>">
+    <span>Nombre</span>
+    <input name="name" value="<%= ev.name || '' %>" placeholder="Tardeo de primavera" required>
+    <%- err('name') %>
+  </label>
+  <label class="field">
+    <span>Descripción</span>
+    <textarea name="description" rows="3"><%= ev.description || '' %></textarea>
+  </label>
+  <label class="field<%= errors.starts_at ? ' invalid' : '' %>">
+    <span>Fecha y hora</span>
+    <input name="starts_at" type="datetime-local" value="<%= ev.starts_at_input || '' %>" required>
+    <%- err('starts_at') %>
+  </label>
+  <div class="row-2">
+    <label class="field<%= errors.capacity ? ' invalid' : '' %>">
+      <span>Cupo total</span>
+      <input name="capacity" type="number" min="1" value="<%= ev.capacity || '' %>" inputmode="numeric" required>
+      <%- err('capacity') %>
+    </label>
+    <label class="field<%= errors.max_seats ? ' invalid' : '' %>">
+      <span>Máximo por reserva</span>
+      <input name="max_seats" type="number" min="1" value="<%= ev.max_seats || '' %>" inputmode="numeric" required>
+      <%- err('max_seats') %>
+    </label>
+  </div>
+
+  <hr>
+  <h2>Reservas</h2>
+  <div class="row-2">
+    <label class="field<%= errors.booking_opens_at ? ' invalid' : '' %>">
+      <span>Abren las reservas</span>
+      <input name="booking_opens_at" type="datetime-local" value="<%= ev.booking_opens_at_input || '' %>">
+      <%- err('booking_opens_at') %>
+    </label>
+    <label class="field<%= errors.priority_hours ? ' invalid' : '' %>">
+      <span>Horas de prioridad <%= topLevel ? topLevel.name : '' %></span>
+      <input name="priority_hours" type="number" min="0" value="<%= ev.priority_hours ?? 48 %>" inputmode="numeric">
+      <%- err('priority_hours') %>
+    </label>
+  </div>
+  <p class="hint">Durante las horas de prioridad solo reservan los clientes <%= topLevel ? topLevel.name : 'del nivel más alto' %>. Después se abre a todos hasta agotar el cupo, y todos los clientes reciben el aviso. Con 0 horas abre directo para todos.</p>
+
+  <label class="check">
+    <input type="checkbox" name="active"<%= ev.active ? ' checked' : '' %>>
+    <span>Visible para los clientes</span>
+  </label>
+
+  <button class="btn" type="submit"><%= ev.id ? 'Guardar cambios' : 'Crear evento' %></button>
+</form>

@@ -1,0 +1,28 @@
+<%# Tarjeta de beneficio. locals: b, daysLeft, (opcional) redeem: 'caja' | 'admin' %>
+<% const left = daysLeft(b); %>
+<div class="benefit<%= b.status !== 'activo' || left < 0 ? ' benefit-used' : '' %>">
+  <div class="benefit-body">
+    <strong><%= b.title %></strong>
+    <% if (b.description) { %><span class="muted small"><%= b.description %></span><% } %>
+    <span class="benefit-meta">
+      <% if (b.status === 'canjeado') { %>
+        Usado el <%= time.fmtDate(b.redeemed_at) %>
+      <% } else if (b.status === 'vencido' || left < 0) { %>
+        Venció el <%= time.fmtDate(b.expires_at) %>
+      <% } else if (left === 0) { %>
+        <span class="pill pill-solid pill-xs">Vence hoy</span>
+      <% } else if (left <= 3) { %>
+        <span class="pill pill-solid pill-xs">Vence en <%= left %> día<%= left === 1 ? '' : 's' %></span>
+      <% } else { %>
+        Vence el <%= time.fmtDate(b.expires_at) %>
+      <% } %>
+    </span>
+  </div>
+  <% if (locals.redeem && b.status === 'activo' && left >= 0) { %>
+    <form method="post" action="/caja/beneficio/<%= b.id %>/canjear" data-confirm="¿Canjear «<%= b.title %>»?">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <input type="hidden" name="back" value="<%= redeem %>">
+      <button class="btn btn-small" type="submit">Canjear</button>
+    </form>
+  <% } %>
+</div>

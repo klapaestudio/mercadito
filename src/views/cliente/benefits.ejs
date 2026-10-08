@@ -1,0 +1,25 @@
+<h1 class="page-title">Beneficios</h1>
+
+<section class="section">
+  <h2>Disponibles</h2>
+  <% if (active.length) { %>
+    <div class="list">
+      <% for (const b of active) { %><%- include('../partials/benefit', { b, daysLeft }) %><% } %>
+    </div>
+    <p class="hint">Cada beneficio se usa una sola vez. Mostrá tu QR en caja para canjearlo.</p>
+  <% } else { %>
+    <div class="empty">
+      <%- include('../partials/art', { key: 2, cls: 'empty-art' }) %>
+      <p>Todavía no tenés beneficios disponibles.<br>Completá tu tarjeta de sellos para ganar el primero.</p>
+    </div>
+  <% } %>
+</section>
+
+<% if (history.length) { %>
+<section class="section">
+  <h2>Usados y vencidos</h2>
+  <div class="list">
+    <% for (const b of history) { %><%- include('../partials/benefit', { b, daysLeft }) %><% } %>
+  </div>
+</section>
+<% } %>

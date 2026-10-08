@@ -1,0 +1,23 @@
+<h1 class="page-title">Notificaciones</h1>
+
+<% if (list.length) { %>
+  <div class="notifs">
+    <% for (const n of list) { %>
+      <article class="notif<%= n.read_at ? '' : ' notif-new' %>">
+        <% if (n.drawing) { %>
+          <span class="notif-art"><%- include('../partials/art', { key: n.drawing }) %></span>
+        <% } %>
+        <div>
+          <strong><%= n.title %></strong>
+          <% if (n.body) { %><p><%= n.body %></p><% } %>
+          <span class="muted small"><%= time.relativeDay(n.created_at) %></span>
+        </div>
+      </article>
+    <% } %>
+  </div>
+<% } else { %>
+  <div class="empty">
+    <%- include('../partials/art', { key: 3, cls: 'empty-art' }) %>
+    <p>Todavía no tenés notificaciones.</p>
+  </div>
+<% } %>

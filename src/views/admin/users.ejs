@@ -1,0 +1,35 @@
+<div class="page-head">
+  <h1 class="page-title">Usuarios del sistema</h1>
+  <a class="btn btn-small" href="/admin/usuarios/nuevo">Nuevo usuario</a>
+</div>
+<p class="muted">Cajeros y administradores. Los cajeros cargan visitas, canjean beneficios y resetean contraseñas de clientes.</p>
+
+<% if (temp) { %>
+  <div class="temp-pass" role="status">
+    <span>Contraseña temporal para <strong><%= temp.username %></strong>:</span>
+    <strong><%= temp.value %></strong>
+    <span class="muted small">Pasásela a la persona. Al ingresar va a tener que crear una nueva. No se vuelve a mostrar.</span>
+  </div>
+<% } %>
+
+<div class="table-wrap">
+  <table class="table">
+    <thead><tr><th>Nombre</th><th>Usuario</th><th>Rol</th><th>Estado</th><th></th></tr></thead>
+    <tbody>
+      <% for (const u of list) { %>
+        <tr class="<%= u.active ? '' : 'row-off' %>">
+          <td><a href="/admin/usuarios/<%= u.id %>"><strong><%= fullName(u) %></strong></a><%= u.id === user.id ? ' (vos)' : '' %></td>
+          <td><%= u.username %></td>
+          <td><%= u.role === 'admin' ? 'Admin' : 'Cajero' %></td>
+          <td><%= u.active ? 'Activo' : 'Inactivo' %><%= u.must_change_password ? ' · clave temporal' : '' %></td>
+          <td class="num">
+            <form method="post" action="/admin/usuarios/<%= u.id %>/resetear-clave" data-confirm="¿Generar una contraseña temporal para <%= u.username %>?">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <button class="link-btn" type="submit">Resetear contraseña</button>
+            </form>
+          </td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>

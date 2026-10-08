@@ -1,0 +1,11 @@
+<%# Tarjeta de sellos: los obtenidos muestran un dibujo (rotando 1-2-3); los pendientes, casillero vacío %>
+<div class="stamps<%= locals.compact ? ' stamps-compact' : '' %>" style="--cols:<%= stampsPerCard <= 6 ? stampsPerCard : Math.ceil(stampsPerCard / 2) %>"
+     role="img" aria-label="<%= stamps %> de <%= stampsPerCard %> sellos">
+  <% for (let i = 1; i <= stampsPerCard; i++) { %>
+    <% if (i <= stamps) { %>
+      <span class="stamp stamp-on" style="--i:<%= i %>"><%- include('art', { key: stampDrawing(i), cls: 'stamp-art' }) %></span>
+    <% } else { %>
+      <span class="stamp"><% if (i === stampsPerCard) { %><span class="stamp-goal" aria-hidden="true">★</span><% } %></span>
+    <% } %>
+  <% } %>
+</div>

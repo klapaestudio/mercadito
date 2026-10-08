@@ -1,0 +1,58 @@
+<a class="back" href="/admin/beneficios">‹ Beneficios</a>
+<h1 class="page-title"><%= title %></h1>
+
+<form class="card form" method="post" action="/admin/beneficios" novalidate>
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <% if (tpl.id) { %><input type="hidden" name="id" value="<%= tpl.id %>"><% } %>
+
+  <label class="field<%= errors.name ? ' invalid' : '' %>">
+    <span>Nombre</span>
+    <input name="name" value="<%= tpl.name || '' %>" placeholder="Una porción de torta" required>
+    <% if (errors.name) { %><small class="field-error"><%= errors.name %></small><% } %>
+  </label>
+  <label class="field">
+    <span>Descripción <em class="muted">(opcional)</em></span>
+    <textarea name="description" rows="2"><%= tpl.description || '' %></textarea>
+  </label>
+
+  <label class="field<%= errors.trigger ? ' invalid' : '' %>">
+    <span>¿Cuándo se otorga?</span>
+    <select name="trigger" data-toggle-trigger>
+      <% for (const [k, v] of Object.entries(TRIGGERS)) { %><option value="<%= k %>"<%= tpl.trigger === k ? ' selected' : '' %>><%= v %></option><% } %>
+    </select>
+    <small class="hint">Tarjeta completa, cumpleaños y te extrañamos usan una sola plantilla activa: si activás esta, se desactiva la anterior.</small>
+  </label>
+
+  <label class="field<%= errors.level_id ? ' invalid' : '' %>" data-show-for="subir_nivel">
+    <span>Nivel</span>
+    <select name="level_id">
+      <option value="">Elegí un nivel</option>
+      <% for (const l of levels) { %><option value="<%= l.id %>"<%= tpl.level_id === l.id ? ' selected' : '' %>><%= l.name %></option><% } %>
+    </select>
+    <% if (errors.level_id) { %><small class="field-error"><%= errors.level_id %></small><% } %>
+  </label>
+
+  <label class="field<%= errors.event_id ? ' invalid' : '' %>" data-show-for="evento">
+    <span>Evento</span>
+    <select name="event_id">
+      <option value="">Elegí un evento</option>
+      <% for (const e of events) { %><option value="<%= e.id %>"<%= tpl.event_id === e.id ? ' selected' : '' %>><%= e.name %></option><% } %>
+    </select>
+    <small class="hint">Se otorga a cada cliente que reserva en este evento.</small>
+    <% if (errors.event_id) { %><small class="field-error"><%= errors.event_id %></small><% } %>
+  </label>
+
+  <label class="field<%= errors.validity_days ? ' invalid' : '' %>">
+    <span>Vigencia (días)</span>
+    <input name="validity_days" type="number" min="0" value="<%= tpl.validity_days ?? 30 %>" inputmode="numeric" required>
+    <small class="hint">En cumpleaños no se usa: vale toda la semana del cumpleaños.</small>
+    <% if (errors.validity_days) { %><small class="field-error"><%= errors.validity_days %></small><% } %>
+  </label>
+
+  <label class="check">
+    <input type="checkbox" name="active"<%= tpl.active ? ' checked' : '' %>>
+    <span>Activo</span>
+  </label>
+
+  <button class="btn" type="submit">Guardar</button>
+</form>

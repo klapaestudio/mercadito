@@ -1,0 +1,11 @@
+<% if (locals.celebration) { %>
+<div class="celebrate" role="dialog" aria-modal="true" aria-labelledby="celebrate-title">
+  <div class="celebrate-card">
+    <div class="confetti" aria-hidden="true"><% for (let i = 0; i < 18; i++) { %><i style="--d:<%= i %>"></i><% } %></div>
+    <%- include('art', { key: celebration.drawing || 1, cls: 'celebrate-art' }) %>
+    <h2 id="celebrate-title"><%= celebration.title %></h2>
+    <p class="muted"><%= celebration.body %></p>
+    <button class="btn btn-block" type="button" data-close-celebration>¡Genial!</button>
+  </div>
+</div>
+<% } %>

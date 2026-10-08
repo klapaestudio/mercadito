@@ -6,7 +6,37 @@ Web app de fidelización para Mercadito de Sabores: los clientes suman sellos en
 - SQLite (`better-sqlite3`). La base y las sesiones viven en `DATA_DIR`.
 - Sin servicios de terceros.
 
-> **Estado:** etapa 1 de 7 (base del proyecto, login y roles).
+> **Estado:** las 7 etapas están implementadas (login y roles, espacio del cliente, caja, admin, notificaciones y tareas automáticas, eventos con prioridad, PWA).
+
+## Qué incluye
+
+- **Cliente:**
+  - Inicio con la tarjeta de sellos (cada sello es un dibujo) y el progreso de nivel.
+  - QR personal.
+  - Beneficios activos y usados.
+  - Notificaciones con indicador de no leídas.
+  - Eventos con reserva.
+  - Mi cuenta.
+  - Pantalla de festejo al completar la tarjeta, subir de nivel o en el cumpleaños.
+- **Cajero:**
+  - Escaneo del QR con la cámara (`html5-qrcode`, servido localmente) o búsqueda por celular o nombre.
+  - Sumar visita (máximo 1 por día, configurable).
+  - Canjear beneficios.
+  - Resetear la contraseña del cliente.
+- **Admin:**
+  - Resumen con métricas.
+  - Clientes, con filtros y ficha completa.
+  - Configuración de sellos, niveles, beneficios, cumpleaños y te extrañamos.
+  - Eventos con reservas.
+  - Usuarios del sistema.
+- **Tareas automáticas** (`node-cron`): corren todos los días a las 00:05 y, si el servidor estuvo apagado, al arrancar.
+  - Cumpleaños.
+  - Te extrañamos.
+  - Vencimiento de beneficios.
+  - Aviso de eventos (este se revisa cada hora).
+- **PWA:** manifest, íconos y service worker. Se puede "Agregar a pantalla de inicio".
+
+> La cámara del navegador solo funciona en `localhost` o con HTTPS. Si probás desde otro dispositivo por la IP local (`http://192.168...`), usá la búsqueda por celular. En Railway, con HTTPS, la cámara funciona.
 
 ## Correr en local
 
@@ -28,7 +58,7 @@ La primera vez se crea solo el usuario admin con `ADMIN_USER` / `ADMIN_PASSWORD`
 npm run seed
 ```
 
-Este comando **borra** clientes, cajeros, visitas, beneficios, notificaciones, eventos y reservas, y los vuelve a crear. No toca los admins ni la configuración.
+Este comando **borra** clientes, cajeros, visitas, beneficios, notificaciones, eventos, reservas y plantillas de beneficios, y los vuelve a crear. No toca los admins, los niveles ni la configuración.
 
 | Rol | Usuario | Contraseña |
 |---|---|---|

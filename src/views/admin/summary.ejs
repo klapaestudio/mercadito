@@ -1,0 +1,69 @@
+<div class="page-head">
+  <h1 class="page-title">Resumen</h1>
+  <span class="muted small"><%= time.fmtDate(time.today()) %></span>
+</div>
+
+<div class="stats">
+  <a class="stat" href="/admin/clientes"><span class="stat-n"><%= stats.clients %></span><span class="stat-l">Clientes registrados</span><span class="stat-s">+<%= stats.newThisMonth %> este mes</span></a>
+  <div class="stat"><span class="stat-n"><%= stats.visitsMonth %></span><span class="stat-l">Visitas del mes</span><span class="stat-s"><%= stats.visitsToday %> hoy</span></div>
+  <div class="stat"><span class="stat-n"><%= stats.redeemedMonth %></span><span class="stat-l">Beneficios canjeados</span><span class="stat-s">este mes</span></div>
+  <div class="stat"><span class="stat-n"><%= stats.activeBenefits %></span><span class="stat-l">Beneficios activos</span><span class="stat-s">sin canjear</span></div>
+</div>
+
+<div class="grid-2">
+  <section class="card">
+    <h2>Clientes por nivel</h2>
+    <% const maxN = Math.max(1, ...byLevel.map((l) => l.n)); %>
+    <div class="bars">
+      <% for (const l of byLevel) { %>
+        <a class="bar-row" href="/admin/clientes?level=<%= l.id %>">
+          <span class="bar-label"><%= l.name %></span>
+          <span class="bar"><span style="width:<%= Math.max(2, Math.round(l.n / maxN * 100)) %>%"></span></span>
+          <span class="bar-n"><%= l.n %></span>
+        </a>
+      <% } %>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Cumpleaños de la semana</h2>
+    <% if (birthdays.length) { %>
+      <div class="list list-plain">
+        <% for (const c of birthdays) { %>
+          <a class="row-link" href="/admin/clientes/<%= c.id %>">
+            <span><strong><%= fullName(c) %></strong><span class="muted small"><%= c.level_name %></span></span>
+            <span class="muted small"><%= time.fmtDayMonth(c.birthday) %></span>
+          </a>
+        <% } %>
+      </div>
+    <% } else { %>
+      <p class="muted">Nadie cumple años esta semana.</p>
+    <% } %>
+  </section>
+</div>
+
+<section class="card">
+  <div class="card-head">
+    <h2>Próximos eventos</h2>
+    <a class="small" href="/admin/eventos">Ver todos</a>
+  </div>
+  <% if (upcoming.length) { %>
+    <div class="list list-plain">
+      <% for (const e of upcoming) { %>
+        <a class="row-link" href="/admin/eventos/<%= e.id %>">
+          <span><strong><%= e.name %></strong><span class="muted small"><%= time.fmtDateTime(e.starts_at) %></span></span>
+          <span class="muted small"><%= e.taken %> / <%= e.capacity %> lugares</span>
+        </a>
+      <% } %>
+    </div>
+  <% } else { %>
+    <p class="muted">No hay eventos próximos. <a href="/admin/eventos/nuevo">Crear uno</a></p>
+  <% } %>
+</section>
+
+<form class="hint" method="post" action="/admin/automaticos/ejecutar">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <input type="hidden" name="back" value="resumen">
+  Tareas automáticas: última ejecución <%= lastRun ? time.fmtDate(lastRun) : 'nunca' %>.
+  <button class="link-btn" type="submit">Ejecutar ahora</button>
+</form>

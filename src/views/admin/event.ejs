@@ -1,0 +1,74 @@
+<%
+  const PHASE = { pronto: 'Todavía no abre', prioridad: 'Prioridad ' + ev.topLevelName, abierto: 'Abierto a todos', lleno: 'Completo', inactivo: 'Oculto', pasado: 'Finalizado' };
+  const active = reservations.filter((r) => r.status === 'activa');
+  const cancelled = reservations.filter((r) => r.status !== 'activa');
+%>
+<a class="back" href="/admin/eventos">‹ Eventos</a>
+
+<div class="page-head">
+  <div>
+    <h1 class="page-title"><%= ev.name %></h1>
+    <p class="muted"><%= time.fmtDateTime(ev.starts_at) %></p>
+  </div>
+  <a class="btn btn-secondary btn-small" href="/admin/eventos/<%= ev.id %>/editar">Editar</a>
+</div>
+
+<div class="stats stats-3">
+  <div class="stat"><span class="stat-n"><%= ev.taken %>/<%= ev.capacity %></span><span class="stat-l">Lugares reservados</span></div>
+  <div class="stat"><span class="stat-n"><%= active.length %></span><span class="stat-l">Reservas</span></div>
+  <div class="stat"><span class="stat-n stat-text"><%= PHASE[ev.phase] %></span><span class="stat-l">Estado</span></div>
+</div>
+
+<section class="card">
+  <% if (ev.description) { %><p><%= ev.description %></p><% } %>
+  <dl class="facts">
+    <div><dt>Abre para <%= ev.topLevelName %></dt><dd><%= time.fmtDateTime(ev.booking_opens_at) %></dd></div>
+    <div><dt>Abre para todos</dt><dd><%= time.fmtDateTime(ev.publicAt) %> <span class="muted">(<%= ev.priority_hours %> h de prioridad)</span></dd></div>
+    <div><dt>Máximo por reserva</dt><dd><%= ev.max_seats %> lugar<%= ev.max_seats > 1 ? 'es' : '' %></dd></div>
+  </dl>
+</section>
+
+<section class="section">
+  <h2>Reservas</h2>
+  <% if (active.length) { %>
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>Cliente</th><th>Celular</th><th>Nivel</th><th class="num">Lugares</th><th>Reservó</th><th></th></tr></thead>
+        <tbody>
+          <% for (const r of active) { %>
+            <tr>
+              <td><a href="/admin/clientes/<%= r.user_id %>"><strong><%= r.first_name %> <%= r.last_name %></strong></a></td>
+              <td><%= r.phone %></td>
+              <td><%= r.level_name %></td>
+              <td class="num"><%= r.seats %></td>
+              <td><%= time.relativeDay(r.created_at) %></td>
+              <td class="num">
+                <form method="post" action="/admin/reservas/<%= r.id %>/cancelar" data-confirm="¿Cancelar la reserva de <%= r.first_name %>? Le vamos a avisar.">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                  <input type="hidden" name="event_id" value="<%= ev.id %>">
+                  <button class="link-btn" type="submit">Cancelar</button>
+                </form>
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  <% } else { %>
+    <p class="muted">Todavía no hay reservas.</p>
+  <% } %>
+
+  <% if (cancelled.length) { %>
+    <h3 class="mt">Canceladas</h3>
+    <div class="list list-plain">
+      <% for (const r of cancelled) { %>
+        <div class="row row-off"><span><%= r.first_name %> <%= r.last_name %> · <%= r.seats %> lugar<%= r.seats > 1 ? 'es' : '' %></span><span class="muted small">por <%= r.cancelled_by_name || 'el cliente' %></span></div>
+      <% } %>
+    </div>
+  <% } %>
+</section>
+
+<form class="mt" method="post" action="/admin/eventos/<%= ev.id %>/eliminar" data-confirm="¿Eliminar «<%= ev.name %>» y todas sus reservas? No se puede deshacer.">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <button class="btn btn-danger btn-small" type="submit">Eliminar evento</button>
+</form>

@@ -1,0 +1,43 @@
+<h1 class="page-title">Cargar visita</h1>
+
+<section class="card scanner-card">
+  <div id="reader" class="reader hidden" aria-live="polite"></div>
+  <div class="scanner-idle" id="scanner-idle">
+    <%- include('../partials/art', { key: 1, cls: 'scanner-art' }) %>
+    <p class="muted">Escaneá el QR del cliente con la cámara.</p>
+  </div>
+  <p class="form-error hidden" id="scanner-error" role="alert"></p>
+  <div class="scanner-actions">
+    <button class="btn btn-block" type="button" id="scan-start">Escanear QR</button>
+    <button class="btn btn-secondary btn-block hidden" type="button" id="scan-stop">Detener cámara</button>
+  </div>
+</section>
+
+<section class="section">
+  <h2>O buscalo</h2>
+  <form class="search" method="get" action="/caja" role="search">
+    <input name="q" value="<%= q %>" type="search" placeholder="Celular, nombre o apellido" autocomplete="off" autocapitalize="none" aria-label="Buscar cliente">
+    <button class="btn" type="submit">Buscar</button>
+  </form>
+
+  <% if (results) { %>
+    <% if (results.length) { %>
+      <div class="list">
+        <% for (const c of results) { %>
+          <a class="row-link" href="/caja/cliente/<%= c.id %>">
+            <span>
+              <strong><%= fullName(c) %></strong>
+              <span class="muted small"><%= c.phone %><%= c.active ? '' : ' · desactivado' %></span>
+            </span>
+            <span class="pill pill-xs"><%= c.level_name || '—' %></span>
+          </a>
+        <% } %>
+      </div>
+    <% } else { %>
+      <div class="empty empty-inline">
+        <%- include('../partials/art', { key: 3, cls: 'empty-art-sm' }) %>
+        <p>No encontramos clientes con «<%= q %>».</p>
+      </div>
+    <% } %>
+  <% } %>
+</section>

@@ -1,0 +1,43 @@
+<h1 class="page-title">Cumpleaños y Te extrañamos</h1>
+
+<form class="form" method="post" action="/admin/automaticos" novalidate>
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+  <section class="card form">
+    <div class="card-head"><h2>Cumpleaños</h2><%- include('../partials/art', { key: 3, cls: 'card-art' }) %></div>
+    <label class="check">
+      <input type="checkbox" name="birthday_enabled"<%= cfg.birthday_enabled ? ' checked' : '' %>>
+      <span>Dar un beneficio en la semana del cumpleaños (lunes a domingo)</span>
+    </label>
+    <label class="field"><span>Beneficio</span><input name="bday_name" value="<%= bday?.name || '' %>" required></label>
+    <label class="field"><span>Descripción</span><input name="bday_description" value="<%= bday?.description || '' %>"></label>
+    <p class="hint">Vence el domingo de la semana del cumpleaños.</p>
+  </section>
+
+  <section class="card form">
+    <div class="card-head"><h2>Te extrañamos</h2><%- include('../partials/art', { key: 2, cls: 'card-art' }) %></div>
+    <label class="check">
+      <input type="checkbox" name="miss_you_enabled"<%= cfg.miss_you_enabled ? ' checked' : '' %>>
+      <span>Dar un beneficio a quienes no vienen hace un tiempo</span>
+    </label>
+    <div class="row-2">
+      <label class="field"><span>Días sin visitas</span><input name="miss_you_days" type="number" min="1" value="<%= cfg.miss_you_days %>" inputmode="numeric" required></label>
+      <label class="field"><span>Vigencia (días)</span><input name="miss_validity_days" type="number" min="1" value="<%= miss?.validity_days || 15 %>" inputmode="numeric" required></label>
+    </div>
+    <label class="field"><span>Beneficio</span><input name="miss_name" value="<%= miss?.name || '' %>" required></label>
+    <label class="field"><span>Descripción</span><input name="miss_description" value="<%= miss?.description || '' %>"></label>
+    <p class="hint">Se da una sola vez por ausencia: si el cliente vuelve y después se vuelve a ausentar, recibe otro.</p>
+  </section>
+
+  <button class="btn" type="submit">Guardar</button>
+</form>
+
+<section class="card card-soft mt">
+  <h2>Tareas automáticas</h2>
+  <p class="muted">Todos los días a las 00:05 (y al iniciar el servidor si no corrieron ese día) se generan los beneficios de cumpleaños y te extrañamos, se marcan los vencidos y se avisan los eventos que abren reservas.</p>
+  <form method="post" action="/admin/automaticos/ejecutar">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <button class="btn btn-secondary btn-small" type="submit">Ejecutar ahora</button>
+    <span class="hint">Última ejecución: <%= lastRun ? time.fmtDate(lastRun) : 'nunca' %></span>
+  </form>
+</section>

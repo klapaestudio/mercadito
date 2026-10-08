@@ -1,0 +1,46 @@
+<a class="back" href="/admin/usuarios">‹ Usuarios</a>
+<h1 class="page-title"><%= title %></h1>
+
+<form class="card form" method="post" action="/admin/usuarios" novalidate>
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <% if (u.id) { %><input type="hidden" name="id" value="<%= u.id %>"><% } %>
+
+  <div class="row-2">
+    <label class="field<%= errors.first_name ? ' invalid' : '' %>">
+      <span>Nombre</span>
+      <input name="first_name" value="<%= u.first_name || '' %>" required>
+      <% if (errors.first_name) { %><small class="field-error"><%= errors.first_name %></small><% } %>
+    </label>
+    <label class="field">
+      <span>Apellido</span>
+      <input name="last_name" value="<%= u.last_name || '' %>">
+    </label>
+  </div>
+
+  <label class="field<%= errors.username ? ' invalid' : '' %>">
+    <span>Usuario</span>
+    <% if (u.id) { %>
+      <div class="readonly"><%= u.username %></div>
+    <% } else { %>
+      <input name="username" value="<%= u.username || '' %>" autocapitalize="none" spellcheck="false" placeholder="caja2" required>
+      <small class="hint">Con este usuario ingresa. La contraseña temporal se genera al crearlo.</small>
+    <% } %>
+    <% if (errors.username) { %><small class="field-error"><%= errors.username %></small><% } %>
+  </label>
+
+  <label class="field<%= errors.role ? ' invalid' : '' %>">
+    <span>Rol</span>
+    <select name="role">
+      <option value="cajero"<%= u.role === 'cajero' ? ' selected' : '' %>>Cajero: carga visitas y canjea beneficios</option>
+      <option value="admin"<%= u.role === 'admin' ? ' selected' : '' %>>Admin: acceso completo</option>
+    </select>
+    <% if (errors.role) { %><small class="field-error"><%= errors.role %></small><% } %>
+  </label>
+
+  <label class="check">
+    <input type="checkbox" name="active"<%= u.active ? ' checked' : '' %>>
+    <span>Activo (puede ingresar)</span>
+  </label>
+
+  <button class="btn" type="submit"><%= u.id ? 'Guardar' : 'Crear usuario' %></button>
+</form>

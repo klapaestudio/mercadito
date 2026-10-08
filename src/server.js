@@ -10,6 +10,7 @@ const time = require('./lib/time');
 const brand = require('./lib/brand');
 const nav = require('./lib/nav');
 const users = require('./services/users');
+const cron = require('./services/cron');
 const { loadUser, forcePasswordChange } = require('./middleware/auth');
 const csrf = require('./middleware/csrf');
 
@@ -81,7 +82,9 @@ app.use(forcePasswordChange);
 
 app.use(require('./routes/auth'));
 app.use(require('./routes/cliente'));
-app.use(require('./routes/placeholders'));
+app.use(require('./routes/cuenta'));
+app.use(require('./routes/cajero'));
+app.use(require('./routes/admin'));
 
 app.use((req, res) => {
   res.status(404).page('error', { title: 'No encontrado', message: 'No encontramos esta página.' });
@@ -98,4 +101,5 @@ app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
 
 app.listen(config.port, () => {
   console.log(`Mercadito de Sabores escuchando en http://localhost:${config.port}`);
+  cron.start();
 });

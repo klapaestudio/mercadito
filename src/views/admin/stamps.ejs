@@ -1,0 +1,36 @@
+<h1 class="page-title">Sellos</h1>
+
+<form class="card form" method="post" action="/admin/sellos" novalidate>
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+  <label class="field<%= errors.stamps_per_card ? ' invalid' : '' %>">
+    <span>Sellos para completar la tarjeta</span>
+    <input name="stamps_per_card" type="number" min="2" max="30" value="<%= cfg.stamps_per_card %>" inputmode="numeric" required>
+    <% if (errors.stamps_per_card) { %><small class="field-error"><%= errors.stamps_per_card %></small><% } %>
+    <small class="hint">Si lo bajás, quienes ya tengan más sellos completan la tarjeta en su próxima visita.</small>
+  </label>
+
+  <label class="check">
+    <input type="checkbox" name="one_stamp_per_day"<%= cfg.one_stamp_per_day && cfg.one_stamp_per_day !== 'off' ? ' checked' : '' %>>
+    <span>Máximo 1 sello por día por cliente</span>
+  </label>
+
+  <hr>
+  <h2>Premio por tarjeta completa</h2>
+  <label class="field<%= errors.prize_name ? ' invalid' : '' %>">
+    <span>Premio</span>
+    <input name="prize_name" value="<%= tpl?.name || '' %>" placeholder="Un café" required>
+    <% if (errors.prize_name) { %><small class="field-error"><%= errors.prize_name %></small><% } %>
+  </label>
+  <label class="field">
+    <span>Descripción <em class="muted">(opcional)</em></span>
+    <input name="prize_description" value="<%= tpl?.description || '' %>">
+  </label>
+  <label class="field<%= errors.validity_days ? ' invalid' : '' %>">
+    <span>Vigencia (días)</span>
+    <input name="validity_days" type="number" min="1" value="<%= tpl?.validity_days || 30 %>" inputmode="numeric" required>
+    <% if (errors.validity_days) { %><small class="field-error"><%= errors.validity_days %></small><% } %>
+  </label>
+
+  <button class="btn" type="submit">Guardar</button>
+</form>
