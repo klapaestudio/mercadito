@@ -68,6 +68,9 @@ function issue(userId, tpl, { source, dedupeKey = null, expiresAt = null } = {})
 }
 
 const activeFor = (userId) => q.active.all(userId, time.today());
+
+/** Beneficio de cumpleaños activo (sin usar y sin vencer), si lo tiene. */
+const activeBirthday = (userId) => activeFor(userId).find((b) => b.source === 'cumpleanos') || null;
 const historyFor = (userId) => q.history.all(userId, time.today());
 const byId = (id) => q.byId.get(id);
 
@@ -86,5 +89,5 @@ const daysLeft = (b) => time.daysBetween(time.today(), b.expires_at);
 
 module.exports = {
   TRIGGERS, templates, template, templateFor, anyTemplateFor, templatesForLevel, templatesForEvent, saveTemplate,
-  issue, activeFor, historyFor, byId, redeem, expireOld, daysLeft,
+  issue, activeFor, activeBirthday, historyFor, byId, redeem, expireOld, daysLeft,
 };

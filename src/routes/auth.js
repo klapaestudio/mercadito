@@ -11,6 +11,7 @@ function startSession(req, user, cb) {
   req.session.regenerate((err) => {
     if (err) return cb(err);
     req.session.userId = user.id;
+    req.session.justLoggedIn = true; // para los recordatorios que se muestran al iniciar sesión
     req.session.save(cb);
   });
 }

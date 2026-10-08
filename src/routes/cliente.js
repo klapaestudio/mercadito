@@ -6,12 +6,37 @@ const levels = require('../services/levels');
 const benefits = require('../services/benefits');
 const notifications = require('../services/notifications');
 const events = require('../services/events');
+const time = require('../lib/time');
 
 const router = express.Router();
 const cliente = requireRole('cliente');
 
 /** URL que codifica el QR: si el cajero la escanea con la cámara del celular, abre la ficha. */
 const qrUrl = (req, user) => `${req.protocol}://${req.get('host')}/caja/qr/${user.qr_token}`;
+
+/**
+ * Festejo a mostrar en el inicio: primero los pendientes (tarjeta completa, nivel, etc.).
+ * Además, mientras tenga el regalo de cumpleaños sin usar y sin vencer,
+ * se lo recordamos cada vez que inicia sesión.
+ */
+function celebrationFor(req) {
+  const pending = notifications.takeCelebration(req.user.id);
+  if (pending) {
+    if (pending.type === 'cumpleanos') delete req.session.justLoggedIn;
+    return pending;
+  }
+  if (!req.session.justLoggedIn) return null;
+  delete req.session.justLoggedIn;
+
+  const gift = benefits.activeBirthday(req.user.id);
+  if (!gift) return null;
+  return {
+    type: 'cumpleanos',
+    drawing: 3,
+    title: `¡Feliz cumpleaños, ${req.user.first_name}!`,
+    body: `Te espera un regalo: ${gift.title}. Válido hasta el ${time.fmtDate(gift.expires_at)}. Mostrá tu QR en caja para usarlo.`,
+  };
+}
 
 router.get('/inicio', cliente, (req, res) => {
   const u = req.user;
@@ -24,7 +49,7 @@ router.get('/inicio', cliente, (req, res) => {
     progress: levels.progress(u.total_visits),
     benefits: active,
     upcoming,
-    celebration: notifications.takeCelebration(u.id),
+    celebration: celebrationFor(req),
   });
 });
 
