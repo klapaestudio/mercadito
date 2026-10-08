@@ -1,0 +1,72 @@
+<%
+  const err = (k) => errors[k] ? `<small class="field-error">${errors[k]}</small>` : '';
+  const val = (k) => form[k] || '';
+%>
+<section class="welcome welcome-small">
+  <%- include('../partials/art', { key: 3, cls: 'welcome-art' }) %>
+  <h1>Creá tu cuenta</h1>
+  <p class="muted">Tu celular va a ser tu usuario.</p>
+</section>
+
+<form class="card form" method="post" action="/registro" novalidate>
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <% if (Object.keys(errors).length) { %>
+    <div class="form-error" role="alert">Revisá los datos marcados.</div>
+  <% } %>
+
+  <div class="row-2">
+    <label class="field<%= errors.first_name ? ' invalid' : '' %>">
+      <span>Nombre</span>
+      <input name="first_name" value="<%= val('first_name') %>" autocomplete="given-name" required>
+      <%- err('first_name') %>
+    </label>
+    <label class="field<%= errors.last_name ? ' invalid' : '' %>">
+      <span>Apellido</span>
+      <input name="last_name" value="<%= val('last_name') %>" autocomplete="family-name" required>
+      <%- err('last_name') %>
+    </label>
+  </div>
+
+  <label class="field<%= errors.phone ? ' invalid' : '' %>">
+    <span>Celular</span>
+    <input name="phone" value="<%= val('phone') %>" type="tel" inputmode="numeric" autocomplete="tel"
+           placeholder="1155551234" required>
+    <small class="hint">Con código de área, sin 0 ni 15.</small>
+    <%- err('phone') %>
+  </label>
+
+  <label class="field<%= errors.email ? ' invalid' : '' %>">
+    <span>Email <em class="muted">(opcional)</em></span>
+    <input name="email" value="<%= val('email') %>" type="email" autocomplete="email" autocapitalize="none">
+    <%- err('email') %>
+  </label>
+
+  <label class="field<%= errors.birthday ? ' invalid' : '' %>">
+    <span>Cumpleaños</span>
+    <input name="birthday" value="<%= val('birthday') %>" type="date" max="<%= time.today() %>" autocomplete="bday" required>
+    <small class="hint">Te vamos a esperar con un regalo en tu semana.</small>
+    <%- err('birthday') %>
+  </label>
+
+  <label class="field<%= errors.password ? ' invalid' : '' %>">
+    <span>Contraseña</span>
+    <input name="password" type="password" autocomplete="new-password" minlength="6" required>
+    <%- err('password') %>
+  </label>
+  <label class="field<%= errors.password2 ? ' invalid' : '' %>">
+    <span>Repetí la contraseña</span>
+    <input name="password2" type="password" autocomplete="new-password" required>
+    <%- err('password2') %>
+  </label>
+
+  <label class="check<%= errors.consent ? ' invalid' : '' %>">
+    <input type="checkbox" name="consent"<%= form.consent ? ' checked' : '' %> required>
+    <span>Acepto el <a href="/privacidad" target="_blank" rel="noopener">uso de mis datos personales</a>
+      según la Ley 25.326 de Protección de Datos Personales.</span>
+  </label>
+  <%- err('consent') %>
+
+  <button class="btn btn-block" type="submit">Crear cuenta</button>
+</form>
+
+<p class="center">¿Ya tenés cuenta? <a class="strong-link" href="/">Ingresá</a></p>

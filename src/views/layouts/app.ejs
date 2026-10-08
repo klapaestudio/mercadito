@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<%- include('../partials/head') %>
+</head>
+<body class="app">
+  <header class="topbar">
+    <a class="topbar-logo" href="/" aria-label="Inicio"><%- include('../partials/art', { key: 'logo', alt: 'Mercadito de Sabores' }) %></a>
+    <button class="menu-toggle" type="button" aria-controls="menu" aria-expanded="false" aria-label="Abrir menú">
+      <span></span><span></span>
+      <% if (unread) { %><i class="dot" aria-hidden="true"></i><% } %>
+    </button>
+  </header>
+
+  <aside class="sidebar" id="menu">
+    <a class="sidebar-logo" href="/" aria-label="Inicio"><%- include('../partials/art', { key: 'logo', alt: 'Mercadito de Sabores' }) %></a>
+    <nav class="nav">
+      <% for (const item of nav) { %>
+        <% if (item.section) { %>
+          <div class="nav-section"><%= item.section %></div>
+        <% } else { %>
+          <a href="<%= item.href %>" class="nav-link<%= isActive(item.href, path) ? ' active' : '' %>"<%- isActive(item.href, path) ? ' aria-current="page"' : '' %>>
+            <span><%= item.label %></span>
+            <% if (item.badge === 'unread' && unread) { %><span class="badge"><%= unread > 99 ? '99+' : unread %></span><% } %>
+          </a>
+        <% } %>
+      <% } %>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="sidebar-user">
+        <strong><%= fullName(user) %></strong>
+        <span class="muted"><%= { cliente: 'Cliente', cajero: 'Cajero', admin: 'Administrador' }[user.role] %></span>
+      </div>
+      <form method="post" action="/salir">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <button class="link-btn" type="submit">Salir</button>
+      </form>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="container">
+      <%- include('../partials/flash') %>
+      <%- body %>
+    </div>
+  </main>
+  <script src="/js/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<section class="welcome">
+  <%- include('../partials/art', { key: 1, cls: 'welcome-art' }) %>
+  <h1>Hola de nuevo</h1>
+  <p class="muted">Sumá sellos en cada visita, subí de nivel y disfrutá beneficios.</p>
+</section>
+
+<form class="card form" method="post" action="/ingresar" novalidate>
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <% if (locals.error) { %><div class="form-error" role="alert"><%= error %></div><% } %>
+
+  <label class="field">
+    <span>Celular o usuario</span>
+    <input name="usuario" value="<%= form.usuario || '' %>" autocomplete="username" inputmode="text"
+           autocapitalize="none" spellcheck="false" placeholder="1155551234" required autofocus>
+  </label>
+  <label class="field">
+    <span>Contraseña</span>
+    <input name="password" type="password" autocomplete="current-password" required>
+  </label>
+
+  <button class="btn btn-block" type="submit">Ingresar</button>
+  <p class="hint center">¿Te olvidaste la contraseña? Pedí que te la reseteen en el mostrador.</p>
+</form>
+
+<p class="center">
+  ¿Primera vez? <a class="strong-link" href="/registro">Creá tu cuenta</a>
+</p>

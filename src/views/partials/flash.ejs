@@ -1,0 +1,3 @@
+<% for (const f of (locals.flash || [])) { %>
+  <div class="flash flash-<%= f.type %>" role="status"><%= f.msg %></div>
+<% } %>

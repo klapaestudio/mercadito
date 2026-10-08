@@ -1,0 +1,10 @@
+<header class="hello">
+  <p class="muted">Hola,</p>
+  <h1><%= user.first_name %></h1>
+  <% if (level) { %><span class="pill"><%= level.name %></span><% } %>
+</header>
+
+<div class="empty">
+  <%- include('../partials/art', { key: 1, cls: 'empty-art' }) %>
+  <p>Tu tarjeta de sellos llega en la próxima etapa.</p>
+</div>

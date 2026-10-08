@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<%- include('../partials/head') %>
+</head>
+<body class="auth">
+  <main class="auth-main">
+    <a class="auth-logo" href="/" aria-label="Mercadito de Sabores"><%- include('../partials/art', { key: 'logo', alt: 'Mercadito de Sabores' }) %></a>
+    <%- include('../partials/flash') %>
+    <%- body %>
+  </main>
+  <script src="/js/app.js" defer></script>
+</body>
+</html>

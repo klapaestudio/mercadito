@@ -1,0 +1,30 @@
+{
+  "name": "mercadito-de-sabores",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Web app de fidelización de Mercadito de Sabores",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "node --watch-path=src --watch-path=.env src/server.js",
+    "start": "node src/server.js",
+    "seed": "node src/db/seed.js",
+    "icons": "node scripts/generate-icons.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "better-sqlite3": "^13.0.3",
+    "dotenv": "^18.0.6",
+    "ejs": "^7.0.1",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "html5-qrcode": "^2.3.8",
+    "node-cron": "^4.6.0",
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2"
+  }
+}
