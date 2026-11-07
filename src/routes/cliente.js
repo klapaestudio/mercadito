@@ -44,7 +44,7 @@ router.get('/inicio', cliente, (req, res) => {
   const justLoggedIn = !!req.session.justLoggedIn;
   const celebration = previewWelcome ? null : celebrationFor(req);
   delete req.session.justLoggedIn;
-  const welcome = previewWelcome || (justLoggedIn && !celebration);
+  const welcome = previewWelcome || justLoggedIn;
   const active = benefits.activeFor(u.id);
   const upcoming = events.forClient(u).filter((e) => e.mine || e.canBook).slice(0, 2);
   res.page('cliente/home', {
