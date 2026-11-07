@@ -20,6 +20,7 @@
   <template data-mw-art="1"><marta-sube-nivel de="1" autoplay="load" no-idle></marta-sube-nivel></template>
   <template data-mw-art="2"><marta-sube-nivel de="2" autoplay="load" no-idle></marta-sube-nivel></template>
   <template data-mw-art="3"><%- marta(progress.jar) %></template>
-  <template data-mw-ending-title>Estás en <%= progress.current ? progress.current.name : 'Marta 1' %>.</template>
-  <template data-mw-ending-copy><%= progress.next ? `Te faltan ${progress.missing} visita${progress.missing === 1 ? '' : 's'} para seguir creciendo junt@s.` : 'Llegaste a mi versión más poderosa. ¡Disfrutá tus beneficios del Club Mercadito!' %></template>
+  <template data-mw-ending-title>¡Ya estás en <%= progress.current ? progress.current.name : 'Marta 1' %>!</template>
+  <template data-mw-ending-copy><%= progress.next ? `Te faltan ${progress.missing} visita${progress.missing === 1 ? '' : 's'} para seguir creciendo junt@s. Vos seguí disfrutando, que yo sigo creciendo.` : 'Me alimentaste hasta llegar a mi versión más poderosa. Ahora me toca a mí: disfrutá todos los beneficios del Club Mercadito!' %></template>
+  <template data-mw-ending-button><%= progress.next ? '¡A alimentar a Marta!' : '¡A disfrutar los beneficios!' %></template>
 </dialog>
