@@ -1,0 +1,25 @@
+<script src="/js/marca/marta-sube-nivel.js" defer></script>
+<script src="/js/marta-welcome.js" defer></script>
+<dialog class="marta-welcome" aria-labelledby="marta-welcome-title" data-marta-welcome>
+  <div class="mw-top"><span class="mw-club"><span>al club</span><%- include('art', { key: 'logo', alt: 'Mercadito' }) %></span><button type="button" class="mw-skip" data-mw-close aria-label="Saltear bienvenida de Marta">Saltear ↗</button></div>
+  <div class="mw-scene">
+    <div class="mw-bubble" aria-live="polite" aria-atomic="true">
+      <span class="mw-eyebrow" data-mw-eyebrow>LA VERDADERA JEFA</span>
+      <h2 id="marta-welcome-title" data-mw-title>Hola, soy Marta.</h2>
+      <p data-mw-copy>La masa madre y la verdadera jefa de Mercadito.</p>
+    </div>
+    <div class="mw-character" data-mw-character aria-hidden="true"></div>
+    <div class="mw-ground" aria-hidden="true"></div>
+  </div>
+  <div class="mw-bottom">
+    <div class="mw-dots" aria-label="Pasos de la bienvenida"><span></span><span></span><span></span><span></span></div>
+    <button type="button" class="mw-pause" data-mw-pause aria-label="Pausar avance automático">Pausar</button>
+    <button type="button" class="btn mw-next" data-mw-next>Siguiente →</button>
+  </div>
+  <template data-mw-art="0"><%- marta(1) %></template>
+  <template data-mw-art="1"><marta-sube-nivel de="1" autoplay="load" no-idle></marta-sube-nivel></template>
+  <template data-mw-art="2"><marta-sube-nivel de="2" autoplay="load" no-idle></marta-sube-nivel></template>
+  <template data-mw-art="3"><%- marta(progress.jar) %></template>
+  <template data-mw-ending-title>Estás en <%= progress.current ? progress.current.name : 'Marta 1' %>.</template>
+  <template data-mw-ending-copy><%= progress.next ? `Te faltan ${progress.missing} visita${progress.missing === 1 ? '' : 's'} para seguir creciendo junt@s.` : 'Llegaste a mi versión más poderosa. ¡Disfrutá tus beneficios del Club Mercadito!' %></template>
+</dialog>
