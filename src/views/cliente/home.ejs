@@ -7,6 +7,12 @@
   </div>
   <button class="hello-marta" type="button" aria-label="Saludar a Marta" data-hop><%- martaCara(birthday ? 'enamorada' : 'contenta') %></button>
 </header>
+<% if (locals.welcome && locals.celebration && celebration.type !== 'cumpleanos') { %>
+<section class="card" role="status">
+  <h2><%= celebration.title %></h2>
+  <p><%= celebration.body %></p>
+</section>
+<% } %>
 
 <% if (birthday) { %>
 <section class="card card-birthday">
@@ -99,6 +105,6 @@
   <p class="local-text">Te esperamos en el local</p>
 </section>
 
-<%- include('../partials/celebration', { jar: progress.jar }) %>
+<% if (!locals.welcome) { %><%- include('../partials/celebration', { jar: progress.jar }) %><% } %>
 
 <% if (locals.welcome) { %><%- include('../partials/marta-welcome') %><% } %>
