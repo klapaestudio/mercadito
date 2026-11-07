@@ -16,7 +16,7 @@ const csrf = require('./middleware/csrf');
 
 bootstrap();
 
-const app = express();
+const app = express();const assetVersion = Date.now().toString(36);
 app.disable('x-powered-by');
 if (config.isProd) app.set('trust proxy', 1); // Railway termina HTTPS en un proxy
 
@@ -33,7 +33,7 @@ app.use((req, res, next) => {
     const layout = locals.layout || (req.user ? 'app' : 'auth');
     res.render(view, locals, (err, body) => {
       if (err) return next(err);
-      res.render(`layouts/${layout}`, { ...locals, body });
+      res.render(`layouts/${layout}`, { ...locals, body }, (err, html) => { if (err) return next(err); res.send(html.replace(/((?:src|href)=["'])(\/(?:css|js)\/[^"'?]+\.(?:css|js))(["'])/g, (_, attr, url, quote) => `${attr}${url}?v=${assetVersion}${quote}`)); });
     });
   };
   next();
@@ -50,7 +50,7 @@ app.use((req, res, next) => {
 
 app.get('/health', (req, res) => res.type('text').send('ok'));
 
-app.use(express.static(path.join(config.root, 'public'), { maxAge: config.isProd ? '7d' : 0 }));
+app.use(express.static(path.join(config.root, 'public'), { maxAge: 0 }));
 app.use(express.urlencoded({ extended: false, limit: '50kb' }));
 app.use(express.json({ limit: '50kb' }));
 
