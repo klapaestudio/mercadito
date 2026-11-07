@@ -102,8 +102,8 @@ class MercaditoFachada extends HTMLElement {
     const box = (b) => `left:${pct(b.x, W)};top:${pct(b.y, H)};width:${pct(b.w, W)};height:${pct(b.h, H)}`;
     const bar = DATA.bar;
     const lines = DATA.lines.map(([o, a, b, c, w], i) => o === 'h'
-      ? `<line class="draw" data-i="${i}" x1="${a}" y1="${b}" x2="${c}" y2="${b}" stroke-width="${w}" pathLength="1"/>`
-      : `<line class="draw" data-i="${i}" x1="${a}" y1="${b}" x2="${a}" y2="${c}" stroke-width="${w}" pathLength="1"/>`).join('');
+      ? `<line class="draw" data-i="${i}" x1="${a}" y1="${b}" x2="${c}" y2="${b}" stroke-width="${w * 1.5}" pathLength="1"/>`
+      : `<line class="draw" data-i="${i}" x1="${a}" y1="${b}" x2="${a}" y2="${c}" stroke-width="${w * 1.5}" pathLength="1"/>`).join('');
     // Todas las capas salen de una sola imagen (atlas): cada pieza es una ventana sobre ella.
     const { w: AW, h: AH } = DATA.atlas;
     const atlas = `${img}atlas.png`;
