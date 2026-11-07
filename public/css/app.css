@@ -807,3 +807,41 @@ a.stat:hover { background: #fff; }
   .container:has(> .hello) > .local { margin-top: 8px; }
   .local-fachada { width: min(100%, 760px); margin-inline: auto; }
 }
+
+/* La bienvenida de Marta: una conversación breve después del ingreso. */
+.marta-welcome { width: min(720px, calc(100% - 32px)); max-height: calc(100dvh - 32px); overflow: auto; padding: 26px 32px 24px; border: 2px solid var(--ink); border-radius: 28px; background: var(--paper); color: var(--fg); box-shadow: 8px 10px 0 rgba(0,0,0,.16); }
+.marta-welcome::backdrop { background: rgba(42,35,25,.26); backdrop-filter: blur(8px); }
+.mw-top, .mw-bottom { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.mw-top > span { font: 600 12px var(--display); letter-spacing: .18em; }
+.mw-skip, .mw-pause { border: 0; background: none; color: var(--muted); cursor: pointer; font: inherit; font-size: 13px; padding: 10px 0; }
+.mw-scene { position: relative; min-height: 410px; padding-top: 26px; }
+.mw-bubble { position: relative; z-index: 2; width: 65%; padding: 24px; border: 1.5px solid; border-radius: 24px 24px 4px 24px; background: #fffdf8; }
+.mw-bubble::after { content: ''; position: absolute; bottom: -13px; right: 28px; width: 23px; height: 23px; background: #fffdf8; border-right: 1.5px solid; border-bottom: 1.5px solid; transform: skewY(40deg); }
+.mw-eyebrow { display: block; font: 600 10px var(--display); letter-spacing: .12em; color: var(--muted); margin-bottom: 12px; }
+.mw-bubble h2 { font-size: clamp(25px, 4vw, 34px); margin-bottom: 10px; }
+.mw-bubble p { font-size: 16px; line-height: 1.5; margin: 0; }
+.mw-character { position: absolute; width: 224px; right: 6px; bottom: 12px; z-index: 1; }
+.mw-character > * { display: block; width: 100%; }
+.mw-ground { position: absolute; bottom: 11px; right: 0; width: 270px; height: 2px; background: var(--ink); }
+.mw-bottom { border-top: 1px solid var(--line); padding-top: 20px; }
+.mw-dots { display: flex; gap: 6px; }
+.mw-dots span { width: 7px; height: 7px; border: 1px solid; border-radius: 50%; }
+.mw-dots .active { width: 25px; border-radius: 5px; background: var(--ink); }
+.mw-dots .done { background: var(--ink); }
+.mw-next { font-size: 14px; padding: 12px 18px; }
+.mw-pause[hidden] { display: none; }
+@media (max-width: 600px) {
+  .marta-welcome { padding: 18px 20px; }
+  .mw-scene { min-height: 445px; padding-top: 20px; }
+  .mw-bubble { width: 100%; padding: 20px; }
+  .mw-bubble p { font-size: 15px; }
+  .mw-character { width: 180px; right: 12px; bottom: 12px; }
+  .mw-ground { width: 215px; }
+  .mw-bottom { gap: 10px; flex-wrap: wrap; }
+  .mw-next { margin-left: auto; }
+}
+@media (prefers-reduced-motion: reduce) { .mw-character * { animation: none !important; } }
+
+.mw-club { display: inline-flex; align-items: center; gap: 8px; }
+.mw-top > .mw-club { font: 500 15px var(--display); letter-spacing: 0; text-transform: none; }
+.mw-club .art { flex: none; width: 108px; transform: translateY(1px); }
