@@ -40,6 +40,11 @@ function celebrationFor(req) {
 
 router.get('/inicio', cliente, (req, res) => {
   const u = req.user;
+  const previewWelcome = !require('../config').isProd && req.query.bienvenida === '1';
+  const justLoggedIn = !!req.session.justLoggedIn;
+  const celebration = previewWelcome ? null : celebrationFor(req);
+  delete req.session.justLoggedIn;
+  const welcome = previewWelcome || (justLoggedIn && !celebration);
   const active = benefits.activeFor(u.id);
   const upcoming = events.forClient(u).filter((e) => e.mine || e.canBook).slice(0, 2);
   res.page('cliente/home', {
@@ -50,7 +55,8 @@ router.get('/inicio', cliente, (req, res) => {
     benefits: active,
     upcoming,
     birthday: benefits.activeBirthday(u.id),
-    celebration: celebrationFor(req),
+    celebration,
+    welcome,
   });
 });
 
