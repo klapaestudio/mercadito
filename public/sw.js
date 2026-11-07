@@ -1,6 +1,6 @@
 // Service worker básico: cachea los archivos estáticos y muestra una página
 // sin conexión. Las páginas con datos del cliente nunca se guardan en caché.
-const VERSION = 'mds-v2';
+const VERSION = 'mds-v3';
 const STATIC = [
   '/offline.html',
   '/css/app.css',
@@ -34,14 +34,14 @@ self.addEventListener('fetch', (e) => {
 
   // Navegación: siempre red; si no hay conexión, página offline
   if (req.mode === 'navigate') {
-    e.respondWith(fetch(req).catch(() => caches.match('/offline.html')));
+    e.respondWith(fetch(req, { cache: 'no-cache' }).catch(() => caches.match('/offline.html')));
     return;
   }
 
   // Estáticos: red primero (para tomar cambios), caché como respaldo
   if (/\.(css|js|svg|png|jpg|webmanifest)$/.test(new URL(req.url).pathname)) {
     e.respondWith(
-      fetch(req)
+      fetch(req, { cache: 'no-cache' })
         .then((res) => {
           if (res.ok) { const copy = res.clone(); caches.open(VERSION).then((c) => c.put(req, copy)); }
           return res;
