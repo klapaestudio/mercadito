@@ -29,7 +29,7 @@
       dot.classList.toggle('done', i < step);
     });
     $('.mw-dots').setAttribute('aria-label', `Paso ${step + 1} de 4`);
-    $('[data-mw-next]').textContent = step === 3 ? '¡A alimentar a Marta!' : 'Siguiente →';
+    $('[data-mw-next]').textContent = step === 3 ? $('[data-mw-ending-button]').content.textContent.trim() : 'Siguiente →';
     $('[data-mw-pause]').hidden = step === 3;
     $('[data-mw-pause]').textContent = paused ? 'Continuar' : 'Pausar';
     $('[data-mw-pause]').setAttribute('aria-label', paused ? 'Continuar avance automático' : 'Pausar avance automático');
