@@ -23,7 +23,8 @@ if (config.isProd) app.set('trust proxy', 1); // Railway termina HTTPS en un pro
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 Object.assign(app.locals, {
-  time, crop: brand.crop, stampDrawing: brand.stampDrawing, isActive: nav.isActive, fullName: users.fullName,
+  time, crop: brand.crop, stampDrawing: brand.stampDrawing,
+  factura: brand.factura, expresion: brand.expresion, ilus: brand.ilus, marta: brand.marta, martaCara: brand.martaCara, etiqueta: brand.etiqueta, isActive: nav.isActive, fullName: users.fullName,
 });
 
 /** res.page(): renderiza la vista y la envuelve en el layout ("app" o "auth"). */

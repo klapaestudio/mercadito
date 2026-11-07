@@ -1,6 +1,6 @@
 // Service worker básico: cachea los archivos estáticos y muestra una página
 // sin conexión. Las páginas con datos del cliente nunca se guardan en caché.
-const VERSION = 'mds-v1';
+const VERSION = 'mds-v2';
 const STATIC = [
   '/offline.html',
   '/css/app.css',
@@ -11,6 +11,9 @@ const STATIC = [
   '/img/dibujo3.svg',
   '/img/icons/icon-192.png',
   '/img/icons/favicon-32.png',
+  '/img/icons/favicon.svg',
+  '/img/marca/papel.jpg',
+  '/img/marca/expresiones/marta-dormida.svg',
 ];
 
 self.addEventListener('install', (e) => {
@@ -36,7 +39,7 @@ self.addEventListener('fetch', (e) => {
   }
 
   // Estáticos: red primero (para tomar cambios), caché como respaldo
-  if (/\.(css|js|svg|png|webmanifest)$/.test(new URL(req.url).pathname)) {
+  if (/\.(css|js|svg|png|jpg|webmanifest)$/.test(new URL(req.url).pathname)) {
     e.respondWith(
       fetch(req)
         .then((res) => {

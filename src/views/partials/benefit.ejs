@@ -1,6 +1,19 @@
 <%# Tarjeta de beneficio. locals: b, daysLeft, (opcional) redeem: 'caja' | 'admin' %>
 <% const left = daysLeft(b); %>
+<%
+  // Dibujo según lo que regala: se mira primero el título y, si no dice nada, la descripción
+  const dibujo = (t) => (t = (t || '').toLowerCase(),
+    /desayuno/.test(t) ? 'desayuno' : /cumple/.test(t) ? 'cumple' : /medialuna|croissant|factura/.test(t) ? 'factura' : /caf[eé]/.test(t) ? 'cafe' : null);
+  const art = dibujo(b.title) || dibujo(b.description);
+%>
 <div class="benefit<%= b.status !== 'activo' || left < 0 ? ' benefit-used' : '' %>">
+  <% if (art) { %>
+    <span class="benefit-art benefit-art-<%= art %>" aria-hidden="true">
+      <% if (art === 'cafe' || art === 'desayuno') { %><img class="ilus" src="<%= ilus.taza %>" alt=""><% } %>
+      <% if (art === 'factura' || art === 'desayuno') { %><img class="ilus" src="<%= factura(1) %>" alt=""><% } %>
+      <% if (art === 'cumple') { %><img class="ilus" src="<%= ilus.torta %>" alt=""><% } %>
+    </span>
+  <% } %>
   <div class="benefit-body">
     <strong><%= b.title %></strong>
     <% if (b.description) { %><span class="muted small"><%= b.description %></span><% } %>

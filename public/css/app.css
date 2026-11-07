@@ -1,19 +1,24 @@
-/* Mercadito de Sabores — estética tipo iOS, blanco y negro */
+/* Mercadito de Sabores — papel de la marca, tinta negra y las ilustraciones de Marta */
 
 :root {
-  --bg: #ffffff;
+  --bg: #FAF9F7;
+  --paper: #FAF9F7 url("/img/marca/papel.jpg") 0 0 / 512px repeat;
+  --surface: rgba(255, 255, 255, .55);
   --fg: #000000;
-  --muted: #8e8e93;
-  --line: #e5e5ea;
-  --fill: #f2f2f7;
-  --fill-2: #e9e9ee;
+  --ink: #000000;
+  --outline: 1.5px solid var(--ink);
+  --muted: #7a736a;
+  --line: #ddd7ce;
+  --fill: #f0ece6;
+  --fill-2: #e7e1d8;
   --danger: #d70015;
   --ok: #1c1c1e;
-  --radius: 16px;
+  --radius: 20px;
   --radius-sm: 12px;
   --shadow: 0 1px 2px rgba(0, 0, 0, .04), 0 4px 16px rgba(0, 0, 0, .04);
   --sidebar: 260px;
   --ease: cubic-bezier(.2, .8, .2, 1);
+  --display: "Jost", Futura, "Century Gothic", -apple-system, sans-serif;
   --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
   color-scheme: light;
 }
@@ -24,7 +29,8 @@ html { -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
-  background: var(--bg);
+  background: var(--paper);
+  background-attachment: fixed;
   color: var(--fg);
   font-family: var(--font);
   font-size: 17px;
@@ -33,10 +39,10 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-h1, h2, h3 { margin: 0 0 .4em; line-height: 1.15; letter-spacing: -.02em; }
-h1 { font-size: 30px; font-weight: 700; }
-h2 { font-size: 22px; font-weight: 600; }
-h3 { font-size: 17px; font-weight: 600; }
+h1, h2, h3 { margin: 0 0 .4em; line-height: 1.12; letter-spacing: -.01em; font-family: var(--display); }
+h1 { font-size: 32px; font-weight: 700; }
+h2 { font-size: 23px; font-weight: 600; }
+h3 { font-size: 18px; font-weight: 600; }
 p { margin: 0 0 1em; }
 a { color: inherit; }
 img { max-width: 100%; }
@@ -52,6 +58,10 @@ img { max-width: 100%; }
 .art { display: block; position: relative; overflow: hidden; }
 .art img { position: absolute; max-width: none; height: auto; user-select: none; pointer-events: none; }
 
+/* Ilustraciones de marca: relleno blanco que toma el papel */
+.ilus { display: block; max-width: 100%; height: auto; mix-blend-mode: multiply; user-select: none; -webkit-user-drag: none; }
+.marta-vivo { display: block; width: 100%; height: auto; overflow: visible; mix-blend-mode: multiply; }
+
 /* ---------- Layout de la app ---------- */
 
 .topbar { display: none; }
@@ -63,8 +73,8 @@ img { max-width: 100%; }
   display: flex;
   flex-direction: column;
   padding: 28px 16px 20px;
-  border-right: 1px solid var(--line);
-  background: var(--bg);
+  border-right: var(--outline);
+  background: var(--paper);
   overflow-y: auto;
   z-index: 20;
 }
@@ -74,7 +84,7 @@ img { max-width: 100%; }
 .nav { display: flex; flex-direction: column; gap: 2px; }
 .nav-section {
   margin: 20px 12px 6px;
-  font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+  font-family: var(--display); font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
   color: var(--muted);
 }
 .nav-link {
@@ -85,7 +95,7 @@ img { max-width: 100%; }
   font-size: 16px;
   transition: background .2s var(--ease);
 }
-.nav-link:hover { background: var(--fill); }
+.nav-link:hover { background: rgba(0, 0, 0, .05); }
 .nav-link.active { background: var(--fg); color: var(--bg); font-weight: 600; }
 
 .badge {
@@ -115,10 +125,10 @@ img { max-width: 100%; }
     display: flex; align-items: center; justify-content: space-between;
     height: calc(56px + env(safe-area-inset-top));
     padding: env(safe-area-inset-top) 16px 0;
-    background: rgba(255, 255, 255, .86);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
-    backdrop-filter: saturate(180%) blur(20px);
-    border-bottom: 1px solid var(--line);
+    background: rgba(250, 249, 247, .9);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    border-bottom: var(--outline);
   }
   .topbar-logo { width: 120px; }
 
@@ -147,7 +157,7 @@ img { max-width: 100%; }
     max-height: calc(100vh - 56px - env(safe-area-inset-top));
     padding: 8px 12px 16px;
     border-right: 0;
-    border-bottom: 1px solid var(--line);
+    border-bottom: var(--outline);
     box-shadow: 0 16px 32px rgba(0, 0, 0, .06);
     opacity: 0;
     transform: translateY(-8px);
@@ -162,6 +172,7 @@ img { max-width: 100%; }
   .sidebar-logo { display: none; }
   .nav-link { padding: 13px 12px; font-size: 17px; }
   .sidebar-foot { padding-top: 16px; border-top: 1px solid var(--line); margin-top: 12px; }
+  .sidebar-foot .avatar { display: none; }
 
   .main { margin-left: 0; }
   .container { padding: 28px 20px 64px; }
@@ -179,7 +190,7 @@ img { max-width: 100%; }
 .welcome { text-align: center; margin-bottom: 28px; }
 .welcome-art { width: 150px; margin: 0 auto 20px; }
 .welcome-small .welcome-art { width: 120px; }
-.welcome h1 { font-size: 28px; }
+.welcome h1 { font-size: 30px; }
 
 /* ---------- Componentes ---------- */
 
@@ -188,8 +199,8 @@ img { max-width: 100%; }
 .page-head .page-title { margin: 0; }
 
 .card {
-  background: var(--bg);
-  border: 1px solid var(--line);
+  background: var(--surface);
+  border: var(--outline);
   border-radius: var(--radius);
   padding: 24px;
   margin-bottom: 20px;
@@ -204,17 +215,17 @@ img { max-width: 100%; }
   font-size: 14px; font-weight: 600;
 }
 .pill-solid { background: var(--fg); color: var(--bg); }
-.pill-muted { border-color: var(--line); color: var(--muted); font-weight: 500; }
+.pill-muted { border-color: var(--muted); color: var(--muted); font-weight: 500; }
 
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   min-height: 50px;
   padding: 0 24px;
-  border: 0;
+  border: 1.5px solid var(--ink);
   border-radius: 14px;
   background: var(--fg);
-  color: var(--bg);
-  font: inherit; font-weight: 600;
+  color: #fff;
+  font: inherit; font-family: var(--display); font-weight: 600; letter-spacing: .01em;
   text-decoration: none;
   cursor: pointer;
   transition: transform .15s var(--ease), opacity .2s var(--ease), background .2s var(--ease);
@@ -222,10 +233,11 @@ img { max-width: 100%; }
 .btn:active { transform: scale(.98); }
 .btn:disabled { opacity: .35; cursor: default; transform: none; }
 .btn-block { width: 100%; }
-.btn-secondary { background: var(--fill); color: var(--fg); }
-.btn-secondary:hover { background: var(--fill-2); }
+.btn { text-align: center; line-height: 1.2; }
+.btn-secondary { background: var(--surface); color: var(--fg); }
+.btn-secondary:hover { background: #fff; }
 .btn-small { min-height: 36px; padding: 0 14px; border-radius: 10px; font-size: 15px; }
-.btn-danger { background: var(--fill); color: var(--danger); }
+.btn-danger { background: var(--surface); color: var(--danger); border-color: var(--danger); }
 
 .link-btn {
   padding: 8px 0; border: 0; background: none;
@@ -245,12 +257,12 @@ input, select, textarea {
   width: 100%;
   min-height: 50px;
   padding: 12px 14px;
-  border: 1.5px solid transparent;
+  border: var(--outline);
   border-radius: var(--radius-sm);
-  background: var(--fill);
+  background: rgba(255, 255, 255, .7);
   color: var(--fg);
   font: inherit; font-size: 17px;
-  transition: border-color .2s var(--ease), background .2s var(--ease);
+  transition: box-shadow .2s var(--ease), background .2s var(--ease);
   -webkit-appearance: none;
   appearance: none;
 }
@@ -260,7 +272,7 @@ select {
   background-repeat: no-repeat; background-position: right 16px center;
   padding-right: 40px;
 }
-input:focus, select:focus, textarea:focus { outline: none; border-color: var(--fg); background: var(--bg); }
+input:focus, select:focus, textarea:focus { outline: none; background: #fff; box-shadow: 0 0 0 1.5px var(--ink); }
 input[type="date"] { display: block; }
 .invalid input, .invalid select { border-color: var(--danger); }
 
@@ -269,6 +281,7 @@ input[type="date"] { display: block; }
 .form-error {
   padding: 12px 14px;
   border-radius: var(--radius-sm);
+  border: 1.5px solid var(--danger);
   background: #fff1f2; color: var(--danger);
   font-size: 15px;
 }
@@ -277,7 +290,7 @@ input[type="date"] { display: block; }
 .check input {
   flex: none;
   width: 24px; min-height: 0; height: 24px; padding: 0; margin-top: 1px;
-  border: 1.5px solid #c7c7cc; border-radius: 7px; background: var(--bg);
+  border: var(--outline); border-radius: 7px; background: #fff;
   cursor: pointer;
 }
 .check input:checked {
@@ -299,21 +312,21 @@ input[type="date"] { display: block; }
   font-size: 15px; font-weight: 500;
   animation: rise .35s var(--ease);
 }
-.flash-error { background: #fff1f2; color: var(--danger); }
+.flash-error { background: #fff1f2; color: var(--danger); border: 1.5px solid var(--danger); }
 
 @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
 /* ---------- Estados vacíos / contenido ---------- */
 
 .empty { text-align: center; padding: 48px 16px; }
-.empty-art { width: 140px; margin: 0 auto 20px; }
+.empty-art { width: 170px; margin: 0 auto 20px; }
 .empty p { color: var(--muted); }
 
 .hello { margin-bottom: 28px; }
 .hello p { margin: 0; font-size: 20px; }
-.hello h1 { font-size: 36px; margin-bottom: 10px; }
+.hello h1 { font-size: 40px; margin-bottom: 10px; }
 
-.prose p { color: #3a3a3c; }
+.prose p { color: #33302c; }
 
 /* ---------- Utilidades ---------- */
 
@@ -323,7 +336,7 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 8px 0; width: 100%; }
 .back { display: inline-block; margin-bottom: 16px; color: var(--muted); text-decoration: none; font-size: 15px; }
 .back:hover { color: var(--fg); }
 .pill-xs { padding: 2px 10px; font-size: 12px; border-width: 1px; white-space: nowrap; }
-.readonly { padding: 12px 14px; border-radius: var(--radius-sm); background: var(--fill); color: var(--muted); }
+.readonly { padding: 12px 14px; border-radius: var(--radius-sm); border: 1.5px dashed var(--muted); color: var(--muted); }
 .btn-big { min-height: 60px; font-size: 19px; }
 .sign-out { margin-top: 12px; }
 .flash-celebrate { background: var(--fg); color: var(--bg); font-size: 17px; font-weight: 600; }
@@ -336,7 +349,7 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 8px 0; width: 100%; }
 .section-head h2, .card-head h2 { margin: 0; }
 .section-head a, .card-head a { color: var(--muted); }
 .card h2 { font-size: 20px; }
-.card-foot { margin: 16px 0; color: #3a3a3c; }
+.card-foot { margin: 16px 0; color: #33302c; }
 .perks { margin: 0; }
 .card-art { width: 64px; }
 
@@ -345,20 +358,21 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 8px 0; width: 100%; }
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
   padding: 14px 16px;
   border-radius: var(--radius-sm);
-  background: var(--fill);
+  border: var(--outline);
+  background: var(--surface);
   text-decoration: none;
 }
 .row > span:first-child, .row-link > span:first-child { display: flex; flex-direction: column; min-width: 0; }
 .row-link { transition: background .2s var(--ease); }
-.row-link:hover { background: var(--fill-2); }
+.row-link:hover { background: #fff; }
 .list-plain { gap: 0; }
-.list-plain .row-link, .list-plain .row { background: none; border-radius: 0; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.list-plain .row-link, .list-plain .row { background: none; border: 0; border-radius: 0; padding: 12px 0; border-bottom: 1px solid var(--line); }
 .list-plain .row-link:last-child, .list-plain .row:last-child { border-bottom: 0; }
 .row-off { opacity: .5; }
 
-.empty-inline { display: flex; align-items: center; gap: 16px; text-align: left; padding: 16px; border-radius: var(--radius); background: var(--fill); }
+.empty-inline { display: flex; align-items: center; gap: 16px; text-align: left; padding: 16px; border-radius: var(--radius); border: 1.5px dashed var(--ink); background: var(--surface); }
 .empty-inline p { margin: 0; }
-.empty-art-sm { width: 72px; flex: none; }
+.empty-art-sm { width: 88px; flex: none; }
 
 /* ---------- Tarjeta de sellos ---------- */
 
@@ -372,17 +386,17 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 8px 0; width: 100%; }
   position: relative;
   aspect-ratio: 1;
   border-radius: 50%;
-  border: 1.5px dashed #c7c7cc;
+  border: 1.5px dashed rgba(0, 0, 0, .3);
   display: flex; align-items: center; justify-content: center;
 }
 .stamp-on {
-  border: 1.5px solid var(--fg);
-  background: var(--bg);
-  animation: stamp-in .5s var(--ease) both;
+  border: var(--outline);
+  background: #fff;
+  animation: stamp-in .5s var(--ease) backwards;
   animation-delay: calc(var(--i) * 40ms);
 }
 .stamp-art { width: 72%; }
-.stamp-goal { color: #c7c7cc; font-size: 18px; }
+.stamp-goal { color: rgba(0, 0, 0, .3); font-size: 18px; }
 .stamps-compact { gap: 8px; max-width: 420px; }
 .card-stamps form { margin-top: 20px; }
 .table-scroll { max-height: 440px; overflow-y: auto; }
@@ -391,7 +405,7 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 8px 0; width: 100%; }
 
 /* ---------- Progreso de nivel ---------- */
 
-.progress { height: 10px; border-radius: 5px; background: var(--fill); overflow: hidden; }
+.progress { height: 14px; border-radius: 7px; border: var(--outline); background: #fff; overflow: hidden; padding: 2px; }
 .progress span { display: block; height: 100%; border-radius: 5px; background: var(--fg); transition: width .8s var(--ease); }
 .progress-labels { display: flex; justify-content: space-between; margin-top: 8px; font-size: 13px; color: var(--muted); }
 
@@ -400,12 +414,13 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 8px 0; width: 100%; }
 .benefit {
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
   padding: 16px 18px;
-  border: 1px solid var(--line);
+  border: var(--outline);
   border-radius: var(--radius);
+  background: var(--surface);
 }
 .benefit-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .benefit-meta { margin-top: 6px; font-size: 13px; color: var(--muted); }
-.benefit-used { background: var(--fill); border-color: transparent; }
+.benefit-used { background: none; border-style: dashed; border-color: var(--muted); }
 .benefit-used strong { color: var(--muted); font-weight: 500; text-decoration: line-through; }
 
 /* ---------- Saludo ---------- */
@@ -419,10 +434,10 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 8px 0; width: 100%; }
 .qr-card {
   display: flex; flex-direction: column; align-items: center; gap: 4px;
   padding: 28px 24px 24px;
-  border: 1px solid var(--line);
+  border: 2px solid var(--ink);
   border-radius: 24px;
   margin-bottom: 20px;
-  box-shadow: var(--shadow);
+  background: #fff;
 }
 .qr { width: 100%; max-width: 300px; margin-bottom: 16px; }
 .qr svg { display: block; width: 100%; height: auto; }
@@ -439,8 +454,9 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 8px 0; width: 100%; }
 }
 .notif:last-child { border-bottom: 0; }
 .notif p { margin: 2px 0 4px; color: #3a3a3c; font-size: 15px; }
-.notif-art { flex: none; width: 52px; height: 52px; border-radius: 14px; background: var(--fill); display: flex; align-items: center; justify-content: center; }
+.notif-art { flex: none; width: 60px; height: 60px; border-radius: 16px; border: var(--outline); background: #fff; display: flex; align-items: center; justify-content: center; }
 .notif-art .art { width: 70%; }
+.notif-art .ilus { width: 84%; max-height: 84%; object-fit: contain; }
 .notif-new::before {
   content: ""; position: absolute; left: -12px; top: 40px;
   width: 8px; height: 8px; border-radius: 50%; background: var(--fg);
@@ -451,7 +467,7 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 8px 0; width: 100%; }
 
 .events { display: flex; flex-direction: column; gap: 16px; }
 .event { margin: 0; scroll-margin-top: 80px; }
-.event-date { font-size: 13px; font-weight: 600; letter-spacing: .02em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.event-date { font-family: var(--display); font-size: 13px; font-weight: 600; letter-spacing: .02em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
 .event-status { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin: 4px 0 16px; }
 .reserve { display: flex; gap: 12px; align-items: flex-end; }
 .field-inline { flex: 0 0 110px; }
@@ -460,7 +476,7 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 8px 0; width: 100%; }
 
 .scanner-card { text-align: center; }
 .scanner-art { width: 96px; margin: 8px auto 12px; }
-.reader { width: 100%; max-width: 420px; margin: 0 auto 16px; border-radius: var(--radius); overflow: hidden; background: #000; }
+.reader { width: 100%; max-width: 420px; margin: 0 auto 16px; border-radius: var(--radius); border: var(--outline); overflow: hidden; background: #000; }
 .reader video { display: block; width: 100% !important; }
 .scanner-actions { display: flex; flex-direction: column; gap: 10px; }
 .scanner-card .form-error { margin-bottom: 12px; }
@@ -478,6 +494,7 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 8px 0; width: 100%; }
   padding: 18px 20px; margin-bottom: 20px;
   border-radius: var(--radius);
   border: 2px solid var(--fg);
+  background: #fff;
 }
 .temp-pass > strong { font-size: 32px; letter-spacing: .12em; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
 
@@ -489,38 +506,39 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 8px 0; width: 100%; }
   display: flex; flex-direction: column;
   padding: 18px 20px;
   border-radius: var(--radius);
-  background: var(--fill);
+  border: var(--outline);
+  background: var(--surface);
   text-decoration: none;
 }
-.stat-n { font-size: 34px; font-weight: 700; letter-spacing: -.03em; line-height: 1.1; }
+.stat-n { font-family: var(--display); font-size: 34px; font-weight: 700; letter-spacing: -.03em; line-height: 1.1; }
 .stat-text { font-size: 20px; padding: 8px 0 4px; }
 .stat-l { font-size: 14px; font-weight: 600; margin-top: 4px; }
 .stat-s { font-size: 13px; color: var(--muted); }
-a.stat:hover { background: var(--fill-2); }
+a.stat:hover { background: #fff; }
 
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
 .grid-2 > .card, .grid-2 > .section { margin: 0 0 20px; }
 
 .bars { display: flex; flex-direction: column; gap: 12px; }
 .bar-row { display: grid; grid-template-columns: 80px 1fr 36px; align-items: center; gap: 12px; text-decoration: none; }
-.bar { height: 10px; border-radius: 5px; background: var(--fill); overflow: hidden; }
+.bar { height: 10px; border-radius: 5px; background: var(--fill-2); overflow: hidden; }
 .bar span { display: block; height: 100%; background: var(--fg); border-radius: 5px; }
 .bar-n { text-align: right; font-weight: 600; }
-.mini-bar { width: 80px; height: 6px; border-radius: 3px; background: var(--fill); overflow: hidden; display: inline-block; vertical-align: middle; margin-right: 8px; }
+.mini-bar { width: 80px; height: 6px; border-radius: 3px; background: var(--fill-2); overflow: hidden; display: inline-block; vertical-align: middle; margin-right: 8px; }
 .mini-bar span { display: block; height: 100%; background: var(--fg); }
 
 .filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; align-items: center; }
 .filters input { flex: 2 1 220px; }
 .filters select { flex: 1 1 170px; width: auto; }
 
-.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+.table-wrap { overflow-x: auto; border: var(--outline); border-radius: var(--radius); background: var(--surface); }
 .table { width: 100%; border-collapse: collapse; font-size: 15px; }
 .table th { text-align: left; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); padding: 12px 16px; border-bottom: 1px solid var(--line); white-space: nowrap; }
 .table td { padding: 12px 16px; border-bottom: 1px solid var(--line); vertical-align: middle; }
 .table tr:last-child td { border-bottom: 0; }
 .table a { text-decoration: none; }
 .table tr[data-href] { cursor: pointer; transition: background .15s; }
-.table tr[data-href]:hover { background: var(--fill); }
+.table tr[data-href]:hover { background: #fff; }
 .table .num { text-align: right; white-space: nowrap; }
 .table-compact td, .table-compact th { padding: 9px 14px; }
 .table form { display: inline; }
@@ -558,9 +576,9 @@ a.stat:hover { background: var(--fill-2); }
   position: fixed; inset: 0; z-index: 100;
   display: flex; align-items: center; justify-content: center;
   padding: 24px;
-  background: rgba(255, 255, 255, .7);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
+  background: rgba(250, 249, 247, .78);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
   animation: fade .3s var(--ease);
 }
 .celebrate.closing { opacity: 0; transition: opacity .3s var(--ease); }
@@ -569,14 +587,15 @@ a.stat:hover { background: var(--fill-2); }
   width: 100%; max-width: 380px;
   padding: 36px 28px 28px;
   text-align: center;
-  background: var(--bg);
+  background: var(--paper);
+  border: 2px solid var(--ink);
   border-radius: 28px;
   box-shadow: 0 24px 64px rgba(0, 0, 0, .14);
   animation: pop .55s cubic-bezier(.2, 1.4, .4, 1);
   overflow: hidden;
 }
 .celebrate-art { width: 200px; margin: 0 auto 16px; animation: wiggle 1.6s ease-in-out .5s 2; }
-.celebrate h2 { font-size: 26px; }
+.celebrate h2 { font-size: 28px; }
 .confetti { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
 .celebrate-card > :not(.confetti) { position: relative; z-index: 1; }
 .confetti i {
@@ -601,3 +620,176 @@ a.stat:hover { background: var(--fill-2); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* ============================================================
+   Ilustraciones de marca en las pantallas del cliente
+   ============================================================ */
+
+/* Login: la fachada animada */
+.welcome-fachada { --mf-paper: transparent; width: calc(100% + 24px); margin: -8px -12px 20px; mix-blend-mode: multiply; }
+.welcome-marta { width: 128px; }
+
+/* Inicio: Marta en su frasco, según el nivel */
+.card-level { display: grid; grid-template-columns: 112px 1fr; column-gap: 14px; }
+.card-level > * { grid-column: 1 / -1; }
+.card-level .level-marta { grid-column: 1; grid-row: 1; margin: -10px 0 6px -6px; }
+.card-level .card-head { grid-column: 2; grid-row: 1; align-self: center; flex-direction: column; align-items: flex-start; gap: 2px; margin: 0; }
+.level-name { font-family: var(--display); font-size: 26px; font-weight: 700; line-height: 1.1; }
+
+/* Frascos vivos (de animacion.html). data-p = id original de la capa */
+.marta-vivo [data-p="burbujas"] circle { transform-box: fill-box; transform-origin: 50% 50%; animation: m-burbuja 3.4s ease-in-out infinite; }
+.marta-vivo [data-p="burbujas"] circle:nth-child(odd) { animation-delay: -1.7s; }
+.marta-vivo [data-p="masa"] > * { transform-box: view-box; transform-origin: 200px 431px; animation: m-sube 3.6s ease-in-out infinite; }
+.marta-vivo.n1 [data-p="masa"] > * { --s: 1.015; }
+.marta-vivo.n2 [data-p="masa"] > * { --s: 1.035; }
+.marta-vivo.n1 [data-p="ojos"] { transform-box: fill-box; transform-origin: 50% 50%; animation: m-parpadeo 3.6s infinite; }
+.marta-vivo.n2 [data-p="tapa"] { transform-box: fill-box; transform-origin: 0% 100%; animation: m-tapa-floja 3s ease-in-out infinite; }
+.marta-vivo.n3 [data-p="masa"] > * { animation: none; }
+.marta-vivo.n3 [data-p="ojos"] { transform-box: fill-box; transform-origin: 50% 50%; animation: m-parpadeo 4.4s infinite; }
+.marta-vivo.n3 [data-p="tapa"] { transform-box: fill-box; transform-origin: 50% 100%; animation: m-tapa 2.8s ease-in-out infinite; }
+.marta-vivo.n3 [data-p="cupula"], .marta-vivo.n3 [data-p="cara"] { transform-box: view-box; transform-origin: 200px 172px; animation: m-respira 2.8s ease-in-out infinite; }
+@keyframes m-tapa-floja { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-3px) rotate(-2deg); } }
+@keyframes m-sube { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(var(--s, 1.02)); } }
+@keyframes m-tapa { 0%, 100% { transform: translateY(0) rotate(0); } 45% { transform: translateY(-7px) rotate(-2deg); } 60% { transform: translateY(-5px) rotate(1deg); } }
+@keyframes m-respira { 0%, 100% { transform: scale(1, 1); } 45% { transform: scale(1.025, 1.07); } }
+@keyframes m-burbuja { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+@keyframes m-parpadeo { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(.1); } }
+
+/* Sellos: facturas y la meta, el vaso CAFE SOLO */
+.stamp .stamp-art { width: 74%; max-height: 74%; object-fit: contain; }
+.stamp-goal { border-style: solid; border-color: rgba(0, 0, 0, .3); background: none; }
+.stamp-goal .stamp-art { width: 52%; max-height: 70%; opacity: .32; filter: grayscale(1); }
+.stamp-goal-on .stamp-art { width: 52%; max-height: 70%; }
+
+/* Festejos animados */
+.celebrate-art { width: 220px; margin: -8px auto 12px; animation: none; }
+.celebrate-art > * { display: block; width: 100%; mix-blend-mode: multiply; }
+.celebrate-cumpleanos .celebrate-art { width: 290px; max-width: 100%; }
+.celebrate-tarjeta_completa .celebrate-art { width: 180px; }
+.celebrate-nivel .celebrate-art { width: 200px; }
+
+/* QR: Marta se asoma por arriba de la tarjeta */
+.qr-page { padding-top: 34px; }
+.qr-card { position: relative; }
+.qr-marta { position: absolute; top: -78px; left: 50%; width: 150px; transform: translateX(-50%); z-index: 2; }
+.qr-marta svg { display: block; width: 100%; height: auto; overflow: visible; }
+.list + .hint { margin-top: 10px; }
+.qr-card > .qr { position: relative; z-index: 1; background: #fff; }
+.qr-page .page-title { margin-bottom: 78px; }
+
+/* Beneficios con su dibujo */
+.benefit { justify-content: flex-start; }
+.benefit-body { flex: 1; }
+.benefit-art { flex: none; display: flex; align-items: flex-end; justify-content: center; width: 60px; height: 60px; }
+.benefit-art .ilus { max-height: 100%; width: auto; }
+.benefit-art-cafe .ilus { height: 58px; }
+.benefit-art-factura .ilus { width: 60px; height: auto; }
+.benefit-art-desayuno { width: 76px; }
+.benefit-art-desayuno .ilus:first-child { height: 56px; }
+.benefit-art-desayuno .ilus:last-child { width: 46px; height: auto; margin-left: -14px; }
+.benefit-art-cumple .ilus { width: 60px; height: auto; }
+.benefit-used .benefit-art { opacity: .4; filter: grayscale(1); }
+
+/* Eventos: la carita de Marta 3 en la prioridad */
+.pill-marta { display: inline-flex; align-items: center; gap: 6px; padding-left: 6px; }
+.pill-marta img { width: 30px; height: auto; mix-blend-mode: multiply; }
+
+/* Mi cuenta: Marta sin frasco como avatar */
+.account-head { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
+.account-head .page-title { margin: 0; }
+.avatar { flex: none; width: 64px; height: 64px; border-radius: 50%; border: var(--outline); background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.avatar .ilus { width: 84%; }
+
+/* Estados vacíos con Marta */
+.empty .ilus.empty-art { width: 190px; }
+.notif-art .ilus[src*="/expresiones/"] { width: 94%; max-height: none; }
+
+/* ============================================================
+   Movimiento: entradas, Marta viva, toques y dibujos
+   ============================================================ */
+
+/* Las secciones entran una detrás de otra */
+.container > * { animation: rise .5s var(--ease) backwards; }
+.container > :nth-child(2) { animation-delay: .06s; }
+.container > :nth-child(3) { animation-delay: .12s; }
+.container > :nth-child(4) { animation-delay: .18s; }
+.container > :nth-child(5) { animation-delay: .24s; }
+.container > :nth-child(n+6) { animation-delay: .3s; }
+.container > .celebrate { animation: fade .3s var(--ease); }
+.list > *, .notifs > * { animation: rise .45s var(--ease) backwards; }
+.list > :nth-child(2), .notifs > :nth-child(2) { animation-delay: .08s; }
+.list > :nth-child(3), .notifs > :nth-child(3) { animation-delay: .16s; }
+.list > :nth-child(n+4), .notifs > :nth-child(n+4) { animation-delay: .22s; }
+
+/* Caras de Marta en línea: flota, parpadea, las z suben, las burbujas laten */
+.marta-cara { display: block; width: 100%; height: auto; overflow: visible; animation: flota 3.2s ease-in-out infinite; }
+.marta-cara [data-p="ojos"] { transform-box: fill-box; transform-origin: 50% 50%; animation: m-parpadeo 4s infinite; }
+.marta-cara [data-p="burbujas"] circle { transform-box: fill-box; transform-origin: 50% 50%; animation: m-burbuja 3.4s ease-in-out infinite; }
+.marta-cara [data-p="burbujas"] circle:nth-child(odd) { animation-delay: -1.7s; }
+.marta-cara [data-p="zzz"] > * { animation: zeta 2.6s ease-in-out infinite; }
+.marta-cara [data-p="zzz"] > :nth-child(2) { animation-delay: .5s; }
+.marta-cara [data-p="zzz"] > :nth-child(3) { animation-delay: 1s; }
+.marta-cara [data-p="burbujitas"] > * { transform-box: fill-box; transform-origin: 50% 50%; animation: m-burbuja 2s ease-in-out infinite; }
+.marta-cara [data-p="burbujitas"] > :nth-child(2) { animation-delay: .3s; }
+.marta-cara [data-p="burbujitas"] > :nth-child(3) { animation-delay: .6s; }
+@keyframes flota { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes zeta { 0% { opacity: 0; transform: translate(0, 4px); } 30%, 70% { opacity: 1; } 100% { opacity: 0; transform: translate(3px, -6px); } }
+@keyframes hop { 0% { transform: translateY(0) scale(1, 1); } 20% { transform: translateY(0) scale(1.08, .9); } 50% { transform: translateY(-22px) scale(.95, 1.06); } 80% { transform: translateY(0) scale(1.06, .94); } 100% { transform: none; } }
+
+/* Saludo con Marta al lado */
+.hello { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+.hello-marta { flex: none; width: 128px; margin: 0 -6px 4px 0; padding: 0; border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.hello-marta.hop { animation: hop .6s cubic-bezier(.3, .7, .4, 1); }
+.hello-marta svg { mix-blend-mode: multiply; }
+
+/* Semana de cumpleaños */
+.card-birthday { text-align: center; padding-top: 12px; }
+.birthday-torta { width: min(260px, 80%); margin: 0 auto 4px; mix-blend-mode: multiply; }
+.card-birthday h2 { font-size: 24px; }
+.card-birthday p { margin-bottom: 6px; }
+
+/* Títulos con dibujito */
+.doodle-head { display: flex; align-items: flex-end; gap: 10px; }
+.doodle { height: 34px; width: auto; transform-origin: 50% 100%; animation: balanceo 3s ease-in-out infinite; }
+.doodle-wide { height: 26px; }
+@keyframes balanceo { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+
+/* El local al pie del inicio */
+.local { margin: 44px -8px 0; text-align: center; }
+.local-fachada { --mf-paper: transparent; mix-blend-mode: multiply; }
+.local-text { margin: 10px 0 0; font-family: var(--display); font-weight: 600; font-size: 15px; letter-spacing: .12em; text-transform: uppercase; }
+
+/* La barra de nivel se llena al entrar */
+.progress span { animation: llenar 1.2s var(--ease) .35s both; }
+@keyframes llenar { from { width: 0; } }
+
+/* Toques: los sellos y Marta responden */
+.stamp-on { cursor: pointer; transition: transform .2s var(--ease); }
+.stamp-on:active { transform: scale(.9) rotate(-8deg); }
+.level-marta { cursor: pointer; transition: transform .25s var(--ease); }
+.level-marta:active { transform: scale(.94, 1.04); }
+.btn { transition: transform .15s var(--ease), opacity .2s var(--ease), background .2s var(--ease), box-shadow .2s var(--ease); }
+.btn:hover { box-shadow: 3px 3px 0 var(--ink); transform: translate(-1px, -1px); }
+.btn:active { box-shadow: none; transform: translate(1px, 1px) scale(.99); }
+
+/* Estados vacíos con Marta viva */
+.empty-marta { display: block; }
+.empty .empty-marta { width: 190px; }
+.empty-inline .empty-marta { width: 92px; }
+
+/* Festejo: también caen facturas */
+.confetti-f {
+  position: absolute; top: -60px; left: calc(8% + var(--d) * 16%);
+  width: 46px; height: auto; mix-blend-mode: multiply;
+  animation: fall 2.6s cubic-bezier(.3, .6, .5, 1) both;
+  animation-delay: calc(.3s + var(--d) * 140ms);
+}
+.confetti-f:nth-child(odd) { width: 38px; animation-duration: 3s; }
+
+/* El nivel con el logo de Marta (la etiqueta del frasco) */
+.etiqueta { display: block; width: 100%; height: auto; overflow: visible; }
+.hello-nivel { display: block; width: 132px; margin: 2px 0 0 -4px; }
+.level-name { width: 150px; margin: 2px 0 2px -4px; }
+.progress-etiquetas { align-items: flex-start; }
+.progress-etiquetas .etiqueta { width: 76px; }
+.qr-nivel { display: block; width: 116px; margin: 6px 0 2px; }

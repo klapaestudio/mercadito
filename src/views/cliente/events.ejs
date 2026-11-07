@@ -18,7 +18,7 @@
           <% } else if (e.phase === 'pronto') { %>
             <span class="pill pill-muted">Reservas desde el <%= time.fmtDateTime(e.booking_opens_at) %></span>
           <% } else if (e.phase === 'prioridad') { %>
-            <span class="pill">Prioridad <%= e.topLevelName %></span>
+            <span class="pill pill-marta"><img src="<%= expresion('feliz') %>" alt="">Prioridad <%= e.topLevelName %></span>
           <% } %>
           <% if (e.phase !== 'pronto') { %>
             <span class="muted small"><%= e.left %> lugar<%= e.left === 1 ? '' : 'es' %> disponible<%= e.left === 1 ? '' : 's' %></span>
@@ -51,7 +51,7 @@
   </div>
 <% } else { %>
   <div class="empty">
-    <%- include('../partials/art', { key: 1, cls: 'empty-art' }) %>
+    <span class="empty-art empty-marta"><%- martaCara('dormida') %></span>
     <p>Por ahora no hay eventos programados.<br>Te vamos a avisar cuando haya uno nuevo.</p>
   </div>
 <% } %>

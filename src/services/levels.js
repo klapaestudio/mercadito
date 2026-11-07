@@ -33,10 +33,13 @@ function progress(visits) {
   const list = all();
   const current = forVisits(visits, list);
   const nxt = next(visits, list);
-  if (!nxt) return { current, next: null, pct: 100, missing: 0 };
+  // Frasco de Marta (1-3) según la posición del nivel; el último nivel siempre es Marta 3
+  const pos = list.indexOf(current);
+  const jar = !nxt ? 3 : Math.min(3, Math.max(1, pos + 1));
+  if (!nxt) return { current, next: null, pct: 100, missing: 0, jar };
   const span = nxt.min_visits - current.min_visits;
   const done = visits - current.min_visits;
-  return { current, next: nxt, pct: Math.round((done / span) * 100), missing: nxt.min_visits - visits };
+  return { current, next: nxt, pct: Math.round((done / span) * 100), missing: nxt.min_visits - visits, jar };
 }
 
 /** Recalcula el nivel de todos los clientes (sin notificar), tras cambiar la configuración. */

@@ -4,9 +4,8 @@
   <div class="notifs">
     <% for (const n of list) { %>
       <article class="notif<%= n.read_at ? '' : ' notif-new' %>">
-        <% if (n.drawing) { %>
-          <span class="notif-art"><%- include('../partials/art', { key: n.drawing }) %></span>
-        <% } %>
+        <% const art = { nivel: expresion('feliz'), tarjeta_completa: ilus.taza, evento: factura(1), cumpleanos: ilus.torta, te_extranamos: expresion('triste') }[n.type] || expresion('contenta'); %>
+        <span class="notif-art"><img class="ilus" src="<%= art %>" alt=""></span>
         <div>
           <strong><%= n.title %></strong>
           <% if (n.body) { %><p><%= n.body %></p><% } %>
@@ -17,7 +16,7 @@
   </div>
 <% } else { %>
   <div class="empty">
-    <%- include('../partials/art', { key: 3, cls: 'empty-art' }) %>
+    <span class="empty-art empty-marta"><%- martaCara('dormida') %></span>
     <p>Todavía no tenés notificaciones.</p>
   </div>
 <% } %>

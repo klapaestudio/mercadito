@@ -1,10 +1,31 @@
-<% if (locals.celebration) { %>
-<div class="celebrate" role="dialog" aria-modal="true" aria-labelledby="celebrate-title">
+<%#
+  Festejo del inicio. Cada tipo tiene su animación de marca:
+  nivel → Marta sube de nivel · tarjeta_completa → el cafecito · cumpleanos → la torta con la vela.
+  Los demás usan una expresión de Marta.
+%>
+<% if (locals.celebration) {
+  const c = celebration, t = c.type;
+  const de = t === 'nivel' && locals.jar >= 2 ? locals.jar - 1 : null;
+%>
+<div class="celebrate celebrate-<%= t %>" role="dialog" aria-modal="true" aria-labelledby="celebrate-title">
   <div class="celebrate-card">
-    <div class="confetti" aria-hidden="true"><% for (let i = 0; i < 18; i++) { %><i style="--d:<%= i %>"></i><% } %></div>
-    <%- include('art', { key: celebration.drawing || 1, cls: 'celebrate-art' }) %>
-    <h2 id="celebrate-title"><%= celebration.title %></h2>
-    <p class="muted"><%= celebration.body %></p>
+    <div class="confetti" aria-hidden="true"><% for (let i = 0; i < 18; i++) { %><i style="--d:<%= i %>"></i><% } %><% for (let i = 0; i < 6; i++) { %><img class="confetti-f" src="<%= factura(i + 1) %>" alt="" style="--d:<%= i %>"><% } %></div>
+    <div class="celebrate-art" aria-hidden="true">
+      <% if (de) { %>
+        <script src="/js/marca/marta-sube-nivel.js" defer></script>
+        <marta-sube-nivel de="<%= de %>" autoplay="load" replay-on-click></marta-sube-nivel>
+      <% } else if (t === 'tarjeta_completa') { %>
+        <script src="/js/marca/mercadito-cafe.js" defer></script>
+        <mercadito-cafe autoplay="load" replay-on-click></mercadito-cafe>
+      <% } else if (t === 'cumpleanos') { %>
+        <script src="/js/marca/mercadito-torta.js" defer></script>
+        <mercadito-torta autoplay="load" replay-on-click></mercadito-torta>
+      <% } else { %>
+        <img class="ilus" src="<%= expresion(t === 'te_extranamos' ? 'triste' : 'feliz') %>" alt="">
+      <% } %>
+    </div>
+    <h2 id="celebrate-title"><%= c.title %></h2>
+    <p class="muted"><%= c.body %></p>
     <button class="btn btn-block" type="button" data-close-celebration>¡Genial!</button>
   </div>
 </div>

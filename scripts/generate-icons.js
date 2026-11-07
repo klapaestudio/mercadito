@@ -1,34 +1,39 @@
 /**
- * Genera los íconos PNG de la PWA a partir de public/img/logo.svg.
- * No modifica el SVG: solo cambia el encuadre (viewBox) en memoria para centrar
- * el logo sobre un cuadrado blanco. Se corre una vez con `npm run icons`
- * y los PNG quedan versionados en public/img/icons/.
+ * Genera los íconos PNG de la PWA a partir del ícono de Marta (assets/marca/).
+ * - icono-app-negro.svg: Marta blanca sobre negro, para la pantalla de inicio.
+ * - favicon.svg: Marta sola, para la pestaña del navegador.
+ * Para el ícono "maskable" se agranda el lienzo en memoria, así Marta queda dentro
+ * de la zona segura. Se corre una vez con `npm run icons` y los PNG quedan
+ * versionados en public/img/icons/.
  */
 const fs = require('fs');
 const path = require('path');
 const { Resvg } = require('@resvg/resvg-js');
 
 const root = path.resolve(__dirname, '..');
-const src = fs.readFileSync(path.join(root, 'public/img/logo.svg'), 'utf8');
+const read = (f) => fs.readFileSync(path.join(root, 'assets/marca', f), 'utf8');
+const icono = read('icono-app-negro.svg');
+const favicon = read('favicon.svg');
 const outDir = path.join(root, 'public/img/icons');
 fs.mkdirSync(outDir, { recursive: true });
 
-// Centro y ancho del logotipo dentro del lienzo original de 1920x1080
-const CX = 960;
-const CY = 540;
-const LOGO_W = 312;
-
-function render(file, size, logoShare) {
-  const side = LOGO_W / logoShare;
-  const vb = `${CX - side / 2} ${CY - side / 2} ${side} ${side}`;
-  const svg = src.replace(/viewBox="[^"]*"/, `viewBox="${vb}" width="${size}" height="${size}"`);
-  const png = new Resvg(svg, { background: '#ffffff', fitTo: { mode: 'width', value: size } }).render().asPng();
+// El ícono mide 400x400 desde (0,-65). zoom > 1 deja más aire alrededor de Marta.
+function render(file, size, svg, { zoom = 1 } = {}) {
+  let s = svg;
+  if (zoom !== 1) {
+    const side = 400 * zoom, x = 200 - side / 2, y = 135 - side / 2;
+    s = s.replace(/viewBox="[^"]*"/, `viewBox="${x} ${y} ${side} ${side}"`)
+         .replace(/<rect [^>]*fill="#000"\/>/, `<rect x="${x}" y="${y}" width="${side}" height="${side}" fill="#000"/>`);
+  }
+  const png = new Resvg(s, { fitTo: { mode: 'width', value: size } }).render().asPng();
   fs.writeFileSync(path.join(outDir, file), png);
   console.log('✓', file);
 }
 
-render('icon-192.png', 192, 0.8);
-render('icon-512.png', 512, 0.8);
-render('icon-maskable-512.png', 512, 0.62); // deja margen para la zona segura
-render('apple-touch-icon.png', 180, 0.78);
-render('favicon-32.png', 32, 0.94);
+render('icon-192.png', 192, icono);
+render('icon-512.png', 512, icono);
+render('icon-maskable-512.png', 512, icono, { zoom: 1.25 });
+render('apple-touch-icon.png', 180, icono);
+render('favicon-32.png', 32, favicon);
+fs.writeFileSync(path.join(outDir, 'favicon.svg'), favicon);
+console.log('✓ favicon.svg');

@@ -1,9 +1,11 @@
 <div class="qr-page">
   <h1 class="page-title">Mi QR</h1>
   <div class="qr-card">
+    <span class="qr-marta"><%- martaCara('contenta') %></span>
     <div class="qr"><%- svg %></div>
     <strong class="qr-name"><%= fullName(user) %></strong>
-    <span class="muted"><%= level ? level.name + ' · ' : '' %><%= user.phone %></span>
+    <% if (level) { %><span class="qr-nivel"><%- etiqueta(jar, level.name) %></span><% } %>
+    <span class="muted"><%= user.phone %></span>
   </div>
   <p class="muted center">Mostrá este código en caja para sumar tu sello o canjear tus beneficios.</p>
   <p class="hint center">Tip: subí el brillo de la pantalla si cuesta leerlo.</p>

@@ -1,9 +1,22 @@
 <% const lvl = progress.current; %>
 <header class="hello">
-  <p class="muted">Hola,</p>
-  <h1><%= user.first_name %></h1>
-  <% if (lvl) { %><span class="pill pill-solid"><%= lvl.name %></span><% } %>
+  <div class="hello-text">
+    <p class="muted">Hola,</p>
+    <h1><%= user.first_name %></h1>
+    <% if (lvl) { %><span class="hello-nivel"><%- etiqueta(progress.jar, lvl.name) %></span><% } %>
+  </div>
+  <button class="hello-marta" type="button" aria-label="Saludar a Marta" data-hop><%- martaCara(birthday ? 'enamorada' : 'contenta') %></button>
 </header>
+
+<% if (birthday) { %>
+<section class="card card-birthday">
+  <script src="/js/marca/mercadito-torta.js" defer></script>
+  <mercadito-torta class="birthday-torta" replay-on-click aria-hidden="true"></mercadito-torta>
+  <h2>¡Es tu semana de cumpleaños!</h2>
+  <p>Te espera <strong>tu <%= birthday.title.toLowerCase() %></strong><%= birthday.description ? ": " + birthday.description.charAt(0).toLowerCase() + birthday.description.slice(1) : "." %> Mostrá tu QR en caja para usarlo.</p>
+  <p class="muted small">Válido hasta el <%= time.fmtDate(birthday.expires_at) %>.</p>
+</section>
+<% } %>
 
 <section class="card card-stamps">
   <div class="card-head">
@@ -19,19 +32,21 @@
       Te falta<%= missing === 1 ? '' : 'n' %> <%= missing %> sello<%= missing === 1 ? '' : 's' %> para completar la tarjeta.
     <% } %>
   </p>
-  <a class="btn btn-block" href="/mi-qr">Mostrá tu QR para sumar sellos</a>
+  <a class="btn btn-block" href="/mi-qr">Mostrá tu QR y sumá sellos</a>
 </section>
 
-<section class="card">
+<section class="card card-level">
+  <div class="level-marta"><%- marta(progress.jar) %></div>
   <div class="card-head">
-    <h2>Tu nivel</h2>
-    <span class="muted"><%= user.total_visits %> visita<%= user.total_visits === 1 ? '' : 's' %></span>
+    <span class="muted small">Tu nivel</span>
+    <h2 class="level-name"><%- etiqueta(progress.jar, lvl ? lvl.name : 'Marta') %></h2>
+    <span class="muted small"><%= user.total_visits %> visita<%= user.total_visits === 1 ? '' : 's' %> en total</span>
   </div>
   <% if (progress.next) { %>
     <div class="progress" role="progressbar" aria-valuenow="<%= progress.pct %>" aria-valuemin="0" aria-valuemax="100">
       <span style="width:<%= Math.max(progress.pct, 3) %>%"></span>
     </div>
-    <div class="progress-labels"><span><%= lvl.name %></span><span><%= progress.next.name %></span></div>
+    <div class="progress-labels progress-etiquetas"><%- etiqueta(progress.jar, lvl.name) %><%- etiqueta(Math.min(3, progress.jar + 1), progress.next.name) %></div>
     <p class="card-foot">Te falta<%= progress.missing === 1 ? '' : 'n' %> <strong><%= progress.missing %> visita<%= progress.missing === 1 ? '' : 's' %></strong> para llegar a <%= progress.next.name %>.</p>
   <% } else { %>
     <div class="progress"><span style="width:100%"></span></div>
@@ -42,7 +57,7 @@
 
 <section class="section">
   <div class="section-head">
-    <h2>Tus beneficios</h2>
+    <h2 class="doodle-head"><img class="ilus doodle" src="<%= ilus.taza %>" alt="">Tus beneficios</h2>
     <% if (benefits.length) { %><a class="small" href="/beneficios">Ver todos</a><% } %>
   </div>
   <% if (benefits.length) { %>
@@ -52,7 +67,7 @@
     <p class="hint">Para usarlos, mostrá tu QR en caja.</p>
   <% } else { %>
     <div class="empty empty-inline">
-      <%- include('../partials/art', { key: 2, cls: 'empty-art-sm' }) %>
+      <span class="empty-art-sm empty-marta"><%- martaCara('pensando') %></span>
       <p>Todavía no tenés beneficios disponibles. ¡Seguí sumando sellos!</p>
     </div>
   <% } %>
@@ -61,7 +76,7 @@
 <% if (upcoming.length) { %>
 <section class="section">
   <div class="section-head">
-    <h2>Próximos eventos</h2>
+    <h2 class="doodle-head"><img class="ilus doodle doodle-wide" src="<%= factura(1) %>" alt="">Próximos eventos</h2>
     <a class="small" href="/eventos">Ver eventos</a>
   </div>
   <div class="list">
@@ -78,4 +93,10 @@
 </section>
 <% } %>
 
-<%- include('../partials/celebration') %>
+<section class="local">
+  <script src="/js/marca/mercadito-fachada.js" defer></script>
+  <mercadito-fachada class="local-fachada" replay-on-click aria-hidden="true"></mercadito-fachada>
+  <p class="local-text">Te esperamos en el local</p>
+</section>
+
+<%- include('../partials/celebration', { jar: progress.jar }) %>

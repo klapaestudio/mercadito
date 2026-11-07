@@ -3,7 +3,10 @@
   const perr = (k) => pwErrors[k] ? `<small class="field-error">${pwErrors[k]}</small>` : '';
   const isClient = user.role === 'cliente';
 %>
-<h1 class="page-title">Mi cuenta</h1>
+<header class="account-head">
+  <% if (isClient) { %><span class="avatar"><img class="ilus" src="<%= ilus.martaSinFrasco %>" alt=""></span><% } %>
+  <h1 class="page-title">Mi cuenta</h1>
+</header>
 
 <form class="card form" method="post" action="/mi-cuenta/datos" novalidate>
   <h2>Tus datos</h2>

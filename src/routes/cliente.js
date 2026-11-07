@@ -49,6 +49,7 @@ router.get('/inicio', cliente, (req, res) => {
     progress: levels.progress(u.total_visits),
     benefits: active,
     upcoming,
+    birthday: benefits.activeBirthday(u.id),
     celebration: celebrationFor(req),
   });
 });
@@ -56,7 +57,7 @@ router.get('/inicio', cliente, (req, res) => {
 router.get('/mi-qr', cliente, async (req, res, next) => {
   try {
     const svg = await QRCode.toString(qrUrl(req, req.user), { type: 'svg', margin: 1, errorCorrectionLevel: 'M' });
-    res.page('cliente/qr', { title: 'Mi QR', svg, level: levels.byId(req.user.level_id) });
+    res.page('cliente/qr', { title: 'Mi QR', svg, level: levels.byId(req.user.level_id), jar: levels.progress(req.user.total_visits).jar });
   } catch (err) { next(err); }
 });
 

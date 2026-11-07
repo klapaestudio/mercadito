@@ -1,11 +1,13 @@
-<%# Tarjeta de sellos: los obtenidos muestran un dibujo (rotando 1-2-3); los pendientes, casillero vacío %>
+<%# Tarjeta de sellos: cada sello es una factura del menú (rotan las 4); la última casilla es la meta, el vaso CAFE SOLO %>
 <div class="stamps<%= locals.compact ? ' stamps-compact' : '' %>" style="--cols:<%= stampsPerCard <= 6 ? stampsPerCard : Math.ceil(stampsPerCard / 2) %>"
      role="img" aria-label="<%= stamps %> de <%= stampsPerCard %> sellos">
-  <% for (let i = 1; i <= stampsPerCard; i++) { %>
+  <% for (let i = 1; i <= stampsPerCard; i++) { const goal = i === stampsPerCard; %>
     <% if (i <= stamps) { %>
-      <span class="stamp stamp-on" style="--i:<%= i %>"><%- include('art', { key: stampDrawing(i), cls: 'stamp-art' }) %></span>
+      <span class="stamp stamp-on<%= goal ? ' stamp-goal-on' : '' %>" style="--i:<%= i %>"><img class="ilus stamp-art" src="<%= goal ? ilus.taza : factura(i) %>" alt="" draggable="false"></span>
+    <% } else if (goal) { %>
+      <span class="stamp stamp-goal"><img class="ilus stamp-art" src="<%= ilus.taza %>" alt="" draggable="false"></span>
     <% } else { %>
-      <span class="stamp"><% if (i === stampsPerCard) { %><span class="stamp-goal" aria-hidden="true">★</span><% } %></span>
+      <span class="stamp"></span>
     <% } %>
   <% } %>
 </div>

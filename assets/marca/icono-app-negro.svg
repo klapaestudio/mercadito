@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -65 400 400" width="1024" height="1024">
+  <title>Marta · ícono de app, fondo negro</title>
+  <rect x="0" y="-65" width="400" height="400" fill="#000"/><g id="masa"><path d="M112,168 C94,170 71,160 67,138 C62,110 86,90 120,84 C150,79 170,68 200,68 C232,68 258,76 286,84 C320,94 338,116 332,142 C328,162 308,171 290,168 C272,165 244,178 222,178 C206,178 196,182 193,192 C191,200 187,205 181,205 C175,205 171,200 171,192 C171,184 166,179 154,177 C140,176 130,166 112,168 Z" fill="#fff"/></g><g transform="translate(200 128) scale(1.8)"><g id="ojos" fill="#000"><ellipse cx="-14" cy="-7" rx="3.4" ry="5"/><ellipse cx="14" cy="-7" rx="3.4" ry="5"/></g><path d="M-5,7 Q0,10.5 5,7" fill="none" stroke="#000" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+</svg>

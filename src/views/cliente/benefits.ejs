@@ -9,7 +9,7 @@
     <p class="hint">Cada beneficio se usa una sola vez. Mostrá tu QR en caja para canjearlo.</p>
   <% } else { %>
     <div class="empty">
-      <%- include('../partials/art', { key: 2, cls: 'empty-art' }) %>
+      <span class="empty-art empty-marta"><%- martaCara('pensando') %></span>
       <p>Todavía no tenés beneficios disponibles.<br>Completá tu tarjeta de sellos para ganar el primero.</p>
     </div>
   <% } %>

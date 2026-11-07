@@ -61,6 +61,13 @@ document.querySelectorAll('[data-close-celebration]').forEach((btn) => {
 })();
 
 // PWA: service worker
+// Marta salta cuando la tocás
+document.querySelectorAll('[data-hop]').forEach((el) => {
+  el.addEventListener('click', () => {
+    el.classList.remove('hop'); void el.offsetWidth; el.classList.add('hop');
+  });
+});
+
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
 }
